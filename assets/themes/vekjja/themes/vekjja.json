@@ -84,7 +84,7 @@
         "textLink.foreground": "#FFC799",
         "textLink.activeForeground": "#FFCFA8",
         // Tooltips
-        "editorHoverWidget.background": "#161616",
+        "editorHoverWidget.background": "#1f1f1f",
         "editorHoverWidget.border": "#282828",
         // Scrollbar
         "scrollbarSlider.background": "#34343480",
@@ -713,6 +713,16 @@
             "settings": {
                 "foreground": "#FFF"
             }
-        }
+        },
+        {
+            "scope": [
+                "constant.language",
+                "constant.language.true.cpp",
+                "constant.language.false.cpp",
+            ],
+            "settings": {
+                "foreground": "#ff7dc7"
+            }
+        },
     ]
 }
