@@ -7,6 +7,7 @@ files:
 - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
 - { src: 'configs/ssh.config', dest: '~/.ssh/config' }
 - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
+- { src: 'themes/vekjja', dest: '~/.cursor/extensions/vekjja-theme' }
 
 casks:
 - aptakube

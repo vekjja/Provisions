@@ -67,6 +67,22 @@ function gpa() {
   git push
 }
 
+#### NodeJS/NPM ####
+alias n="npm run"
+
+#### ESP IDF ####
+export IDF_PATH="$HOME/esp/esp-idf"
+
+# . $HOME/esp/esp-idf/export.sh
+alias idf="idf.py"
+alias get_idf='. $HOME/esp/esp-idf/export.sh'
+alias idfb="rm ./sdkconfig && idf.py build"
+alias idff="idf.py flash"
+alias idfm="idf.py monitor"
+alias idfs="idf.py size"
+alias idfsc="idf.py size-components"
+alias idfsf="idf.py size-files"
+
 #### Pulumi ####
 alias p="pulumi"
 alias pup="pulumi up"

@@ -1,0 +1,26 @@
+{
+    "name": "vekjja-theme",
+    "displayName": "Vekjja",
+    "description": "Color theme based on Vesper",
+    "version": "1.0.0",
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "categories": [
+        "Themes"
+    ],
+    "contributes": {
+        "themes": [
+            {
+                "label": "Vekjja",
+                "uiTheme": "vs-dark",
+                "path": "./themes/vekjja.json"
+            }
+        ]
+    },
+    "publisher": "Vekjja",
+    "repository": {
+        "type": "git",
+        "url": ""
+    }
+}

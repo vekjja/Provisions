@@ -26,7 +26,7 @@ set backspace=indent,eol,start " Set backspace behavior
 set encoding=utf-8
 
 " Open NERDTree in the directory of the current file
-autocmd VimEnter * if argc() > 0 | execute 'NERDTree' fnameescape(fnamemodify(argv(0), ':p:h')) | wincmd w | endif
+"autocmd VimEnter * if argc() > 0 | execute 'NERDTree' fnameescape(fnamemodify(argv(0), ':p:h')) | wincmd w | endif
 
 "autocmd BufWinEnter * if &buftype == '' && argc() > 0 | execute 'NERDTree' fnameescape(expand('%:p:h')) | wincmd p | endif
 
