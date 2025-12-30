@@ -24,7 +24,7 @@
         "diffEditor.removedLineBackground": "#FF808015",
         "editorInlayHint.foreground": "#A0A0A0",
         "editorInlayHint.background": "#1C1C1C",
-        // Sidebar - Base Vesper with your overrides
+        // Sidebar 
         "sideBar.background": "#1f1f1f",
         "sideBarTitle.foreground": "#A0A0A0",
         "sideBarSectionHeader.foreground": "#eaeaea",
@@ -35,12 +35,12 @@
         "activityBar.foreground": "#A0A0A0",
         "activityBarBadge.background": "#FFC799",
         "activityBarBadge.foreground": "#000",
-        // Title bar - Your overrides
+        // Title bar 
         "titleBar.activeBackground": "#1f1f1f",
         "titleBar.inactiveBackground": "#1a1a1a",
         "titleBar.activeForeground": "#eaeaea",
         "titleBar.inactiveForeground": "#939393",
-        // Tab - Your overrides
+        // Tab 
         "tab.border": "#2c2c2c",
         "tab.activeBackground": "#2f2f2f",
         "tab.inactiveBackground": "#1a1a1a",
@@ -72,7 +72,7 @@
         "icon.foreground": "#A0A0A0",
         "input.background": "#1C1C1C",
         "selection.background": "#666",
-        // Brackets - Your overrides
+        // Brackets 
         "editorBracketHighlight.foreground1": "#ff7dc7",
         "editorBracketHighlight.foreground2": "#939393",
         "editorBracketHighlight.foreground3": "#8dfdff",
@@ -91,7 +91,7 @@
         "scrollbarSlider.hoverBackground": "#343434",
         // Settings
         "settings.modifiedItemIndicator": "#FFC799",
-        // Panel - Your overrides
+        // Panel 
         "panel.border": "#393939"
     },
     "tokenColors": [
@@ -176,7 +176,7 @@
             }
         },
         {
-            "name": "Function, Special Method - Your Custom Color",
+            "name": "Function, Special Method",
             "scope": [
                 "entity.name.function",
                 "variable.function",
@@ -616,7 +616,10 @@
             "name": "Markup - Quote",
             "scope": [
                 "markup.quote"
-            ]
+            ],
+            "settings": {
+                "foreground": "#FFF"
+            }
         },
         {
             "name": "Markdown - Link",
