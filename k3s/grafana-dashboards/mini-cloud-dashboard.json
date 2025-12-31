@@ -40,7 +40,7 @@
             "barAlignment": 0,
             "barWidthFactor": 1,
             "drawStyle": "line",
-            "fillOpacity": 3,
+            "fillOpacity": 57,
             "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
@@ -52,7 +52,7 @@
             "lineStyle": {
               "fill": "solid"
             },
-            "lineWidth": 1,
+            "lineWidth": 3,
             "pointSize": 5,
             "scaleDistribution": {
               "log": 2,
@@ -90,7 +90,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 12,
         "w": 12,
         "x": 0,
         "y": 0
@@ -168,7 +168,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 18,
             "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
@@ -180,7 +180,7 @@
             "lineStyle": {
               "fill": "solid"
             },
-            "lineWidth": 2,
+            "lineWidth": 3,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -211,7 +211,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 12,
         "w": 12,
         "x": 12,
         "y": 0
@@ -369,10 +369,10 @@
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 12,
         "w": 12,
         "x": 0,
-        "y": 9
+        "y": 12
       },
       "id": 22,
       "options": {
@@ -576,10 +576,10 @@
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 12,
         "x": 12,
-        "y": 9
+        "y": 12
       },
       "id": 14,
       "options": {
@@ -835,8 +835,8 @@
       "gridPos": {
         "h": 9,
         "w": 12,
-        "x": 0,
-        "y": 18
+        "x": 12,
+        "y": 20
       },
       "id": 23,
       "options": {
@@ -1005,12 +1005,12 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "America/New_York",
-  "title": "Livingroom Cloud Dashboard",
+  "title": "Mini Cloud Dashboard",
   "uid": "7d57716318ee0dddbac5a7f451fb7754",
-  "version": 61
+  "version": 6
 }

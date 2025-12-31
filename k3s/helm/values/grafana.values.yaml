@@ -65,11 +65,17 @@ grafana:
       # Search in all namespaces or specific namespace
       searchNamespace: ALL
 
-  # Datasources - configure Loki for logging
+  # Datasources - configure Prometheus for metrics and Loki for logging
   datasources:
     datasources.yaml:
       apiVersion: 1
       datasources:
+      - name: prometheus
+        type: prometheus
+        access: proxy
+        url: http://grafana-kube-prometheus-st-prometheus:9090
+        isDefault: true
+        editable: true
       - name: Loki
         type: loki
         access: proxy
@@ -83,7 +89,7 @@ prometheus:
   prometheusSpec:
     # Scrape interval - how often to collect metrics (default is 30s)
     scrapeInterval: 6s
-    scrapeTimeout: 10s
+    scrapeTimeout: 5s
 
     # Evaluation interval - how often to evaluate rules (default is 30s)
     evaluationInterval: 15s
