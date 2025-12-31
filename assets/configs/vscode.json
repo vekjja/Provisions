@@ -1,0 +1,264 @@
+{
+    "platformio-ide.autoCloseSerialMonitor": true,
+    "platformio-ide.disablePIOHomeStartup": true,
+    "platformio-ide.toolbar": [
+        {
+            "text": "$(home)",
+            "tooltip": "PlatformIO: Home",
+            "commands": "platformio-ide.showHome"
+        },
+        {
+            "text": "$(check)",
+            "tooltip": "PlatformIO: Build",
+            "commands": "platformio-ide.build"
+        },
+        {
+            "text": "$(arrow-right)",
+            "tooltip": "PlatformIO: Upload",
+            "commands": "platformio-ide.upload"
+        },
+        {
+            "text": "$(arrow-right)$(plug)",
+            "tooltip": "PlatformIO: Upload and Monitor",
+            "commands": "platformio-ide.uploadAndMonitor"
+        },
+        {
+            "text": "$(plug)",
+            "tooltip": "PlatformIO: Serial Monitor",
+            "commands": "platformio-ide.serialMonitor"
+        },
+        {
+            "text": "$(terminal)",
+            "tooltip": "PlatformIO: New Terminal",
+            "commands": "platformio-ide.newTerminal"
+        },
+        {
+            "text": "$(trashcan)",
+            "tooltip": "PlatformIO: Clean",
+            "commands": "platformio-ide.clean"
+        }
+    ],
+    "black-formatter.interpreter": [
+        "/usr/bin/python3"
+    ],
+    "black-formatter.args": [
+        "--line-length=79"
+    ],
+    "flake8.args": [
+        "--max-line-length=120",
+        "--ignore=E402,F841,F401,E302,E305"
+    ],
+    "go.toolsManagement.autoUpdate": true,
+    "go.languageServerFlags": [
+        "-rpc.trace"
+    ],
+    "[go]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+        },
+        "editor.defaultFormatter": "golang.go"
+    },
+    "explorer.confirmDelete": false,
+    "gitlens.hovers.currentLine.enabled": false,
+    "explorer.confirmDragAndDrop": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "editor.fontFamily": "'FiraMono Nerd Font Propo', 'Operator Mono'",
+    "editor.defaultFormatter": "vscode.css-language-features",
+    "editor.glyphMargin": false,
+    "editor.defaultFoldingRangeProvider": "golang.go",
+    "editor.tabSize": 4,
+    "editor.hover.delay": 300,
+    "editor.renderWhitespace": "all",
+    "editor.inlineSuggest.enabled": true,
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "mohd-akram.vscode-html-format"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnType": true,
+        "editor.formatOnSave": true
+    },
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "C_Cpp.default.customConfigurationVariables": {},
+    "[cpp]": {
+        "editor.wordBasedSuggestions": "matchingDocuments",
+        "editor.suggest.insertMode": "replace",
+        "editor.semanticHighlighting.enabled": true,
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[ignore]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "terminal.integrated.fontFamily": "'FiraMono Nerd Font Propo', 'OperatorMono Nerd Font Mono'",
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "editor.fontSize": 17,
+    "terminal.integrated.fontSize": 13,
+    "workbench.colorCustomizations": {
+        // "editor.foreground": "#eaeaea",
+        // "editor.background": "#1f1f1f",
+        // "sideBar.background": "#1f1f1f",
+        // "editorBracketHighlight.foreground1": "#ff7dc7",
+        // "editorBracketHighlight.foreground2": "#939393",
+        // "editorBracketHighlight.foreground3": "#8dfdff",
+        // "editorBracketHighlight.foreground4": "#ff7dc7",
+        // "editorBracketHighlight.foreground5": "#939393",
+        // "editorBracketHighlight.foreground6": "#8dfdff",
+        // "titleBar.activeBackground": "#1f1f1f",
+        // "titleBar.activeForeground": "#eaeaea",
+        // "titleBar.inactiveBackground": "#1a1a1a",
+        // "titleBar.inactiveForeground": "#939393",
+        // "tab.activeBackground": "#2f2f2f",
+        // "tab.activeForeground": "#eaeaea",
+        // "tab.inactiveBackground": "#1a1a1a",
+        // "tab.inactiveForeground": "#939393",
+        // "tab.border": "#2c2c2c",
+        // // "tab.activeBorder": "#00fbff",
+        // // "tab.activeBorderTop": "#00fbff",
+        // "tab.hoverBackground": "#252525",
+        // "tab.hoverForeground": "#eaeaea",
+        // "editorGroupHeader.tabsBackground": "#1a1a1a",
+        // "editorGroupHeader.noTabsBackground": "#1a1a1a",
+        // "editorGroupHeader.tabsBorder": "#2c2c2c",
+        // "panel.border": "#393939",
+        // "sideBar.border": "#393939",
+        // "sideBarSectionHeader.foreground": "#eaeaea",
+        // "sideBarSectionHeader.background": "#2f2f2f",
+        // "sideBarSectionHeader.border": "#393939",
+        //     "terminal.ansiGreen": "#4dffde",
+        //     "terminal.ansiBrightGreen": "#4dffde",
+        //     "terminal.ansiCyan": "#dc8000",
+        //     "terminal.ansiBrightCyan": "#4dffde",
+        "[Vekjja]": {
+            // "editor.foreground": "#dbdbdb",
+            // "editor.background": "#161616",
+            // "sideBar.background": "#161616",
+            // "titleBar.activeBackground": "#161616",
+        }
+    },
+    "editor.tokenColorCustomizations": {
+        "[Vekjja]": {
+            "textMateRules": [
+                {
+                    "scope": [
+                        "meta.function.definition.cpp",
+                        // "meta.body.function.definition.cpp",
+                        // "entity.name.function"
+                    ],
+                    "settings": {
+                        "foreground": "#eeeeee"
+                    }
+                },
+                {
+                    "scope": [
+                        // "meta.parens.cpp",
+                        // "constant.language.true.cpp",
+                        // "constant.language",
+                        // "variable.other.object.access.cpp",
+                        // "entity.name.function"
+                    ],
+                    "settings": {
+                        "foreground": "#ff0037"
+                    }
+                },
+            ]
+        }
+    },
+    "git.openRepositoryInParentFolders": "never",
+    "workbench.productIconTheme": "material-product-icons",
+    "[properties]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "files.associations": {
+        "*.conf": "bat",
+        "*.ino": "cpp",
+        "*.md": "markdown",
+        "*.yaml": "yaml",
+        "*.yml": "ansible",
+        "*.defaults": "ini"
+    },
+    "[dockerfile]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[hosts]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "go.installDependenciesWhenBuilding": true,
+    "go.lintTool": "golint",
+    "workbench.tree.stickyScrollMaxItemCount": 1,
+    "editor.stickyScroll.maxLineCount": 6,
+    "python.autoComplete.extraPaths": [],
+    "go.formatTool": "goimports",
+    "explorer.confirmPasteNative": false,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[liquid]": {},
+    "terminal.integrated.allowedLinkSchemes": [
+        "file",
+        "http",
+        "https",
+        "mailto",
+        "vscode",
+        "vscode-insiders",
+        "docker-desktop"
+    ],
+    "[dotenv]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "redhat.telemetry.enabled": false,
+    "ansible.validation.lint.enabled": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "terminal.integrated.fontLigatures.featureSettings": "\"calt\" on, \"liga\" on",
+    "workbench.iconTheme": "symbols",
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorSurroundingLines": 1,
+    "workbench.panel.showLabels": false,
+    "symbols.hidesExplorerArrows": false,
+    "cursor.cpp.disabledLanguages": [
+        "plaintext",
+        "scminput"
+    ],
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "editor.minimap.enabled": true,
+    "remote.SSH.remotePlatform": {
+        "mainnet-products-6": "linux"
+    },
+    "cursor.composer.cmdPFilePicker2": true,
+    "ansible.lightspeed.enabled": false,
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "cursor.composer.textSizeScale": 1.15,
+    "workbench.colorTheme": "Vekjja",
+    "workbench.editor.editorActionsLocation": "hidden",
+    "editor.minimap.size": "fit",
+    "workbench.navigationControl.enabled": false,
+    "workbench.editor.enablePreview": false
+}
