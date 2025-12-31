@@ -10,19 +10,19 @@ files:
   - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
 
 firewall_rules:
-  - { port: '22', proto: 'tcp', comment: 'SSH' }
-  - { port: '6443', proto: 'tcp', comment: 'Kubernetes API' }
-  - { port: '51820', proto: 'udp', comment: 'WireGuard VPN' }
-  - { port: '25', proto: 'tcp', comment: 'SMTP' }
-  - { port: '143', proto: 'tcp', comment: 'IMAP' }
-  - { port: '993', proto: 'tcp', comment: 'IMAPS' }
-  - { port: '465', proto: 'tcp', comment: 'SMTPS' }
-  - { port: '587', proto: 'tcp', comment: 'SMTP Submission' }
+  - { port: '22', proto: 'tcp', comment: 'SSH', from: '10.0.0.0/16' }
   - { port: '3389', proto: 'tcp', comment: 'RDP', from: '10.0.0.0/16' }
+  - { port: '6443', proto: 'tcp', comment: 'Kubernetes API', from: '10.0.0.0/16' }
   - { port: '445', proto: 'tcp', comment: 'SMB over TCP', from: '10.0.0.0/16' }
   - { port: '137', proto: 'udp', comment: 'SMB NetBIOS name', from: '10.0.0.0/16' }
   - { port: '139', proto: 'tcp', comment: 'SMB NetBIOS session', from: '10.0.0.0/16' }
   - { port: '138', proto: 'udp', comment: 'SMB NetBIOS datagram', from: '10.0.0.0/16' }
+  - { port: '51820', proto: 'udp', comment: 'WireGuard VPN' }
+  # - { port: '25', proto: 'tcp', comment: 'SMTP' }
+  # - { port: '143', proto: 'tcp', comment: 'IMAP' }
+  # - { port: '993', proto: 'tcp', comment: 'IMAPS' }
+  # - { port: '465', proto: 'tcp', comment: 'SMTPS' }
+  # - { port: '587', proto: 'tcp', comment: 'SMTP Submission' }
 
 static_ip:
   hostname: mini-cloud  # Hostname to add to /etc/hosts
@@ -46,7 +46,7 @@ k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
     - --prefer-bundled-bin
     - --write-kubeconfig-mode 644
     - --write-kubeconfig ~/.kube/k3sconfig
-    - --default-local-storage-path /mnt/ssd/ex2/k3s/storage
+    - --default-local-storage-path /mnt/ssd/pny250/k3s/storage
 
 wireguard:
   server_endpoint: livingroom.cloud
@@ -66,19 +66,19 @@ fs_mounts:
   path: /mnt/ssd/movies,
   src: "UUID=0CB81103B810ED48",
   fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro",
+  opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
 }
 - {
   path: /mnt/ssd/series,
   src: "UUID=56885E3A885E18B7",
   fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro",
+  opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
 }
 - {
   path: /mnt/ssd/pny250,
   src: "UUID=1DAC99F73EFA9CB8",
   fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro",
+  opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
 }
 - {
   path: /mnt/hdd/tera,
@@ -90,13 +90,7 @@ fs_mounts:
   path: /mnt/hdd/barracuda,
   src: "UUID=24FEA26DFEA236C8",
   fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro"
-}
-- {
-  path: /mnt/ssd/ex2,
-  src: "UUID=8e0dfd97-1bfc-40f3-af1c-3bff20d80df9",
-  fstype: ext4,
-  opts: "defaults,nofail"
+  opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5"
 }
 
 # nfs_shares:

@@ -180,8 +180,13 @@ fs_mounts:
   - path: /mnt/ssd/movies
     src: "UUID=0CB81103B810ED48"
     fstype: ntfs
-    opts: "defaults,nofail"
+    opts: "defaults,nobootwait,nofail,x-systemd.device-timeout=5"
 ```
+
+**Recommended mount options for boot performance:**
+- `nobootwait`: Don't wait for mount to complete before continuing boot (Ubuntu/Debian)
+- `nofail`: Don't halt boot if mount fails
+- `x-systemd.device-timeout=5`: Limit device discovery wait time to 5 seconds (prevents long boot delays when drives aren't available)
 
 ### 📤 `nfs_shares` (NFS server exports)
 
@@ -220,6 +225,8 @@ Applies to: Linux/systemd hosts where `k3s` is defined
 This is primarily to prevent log agents (like **Grafana Alloy**) from spamming:
 `failed to create fsnotify watcher: too many open files`
 
+Also configures shutdown timeouts to reduce long shutdown times caused by containerd.
+
 ```yaml
 k3s_tuning:
   enabled: true
@@ -228,6 +235,7 @@ k3s_tuning:
   inotify_max_user_instances: 8192
   inotify_max_queued_events: 32768
   fs_file_max: 2097152
+  shutdown_timeout_sec: 30  # Reduces containerd shutdown delays (default: 30s, systemd default: 90s)
 ```
 
 ### 🔐 `wireguard` (WireGuard server + client configs)
