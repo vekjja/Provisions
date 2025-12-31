@@ -17,6 +17,7 @@ casks:
 - iterm2
 - spotify
 - thebrowsercompany-dia
+- mimestream
 
 packages:
 - helm
