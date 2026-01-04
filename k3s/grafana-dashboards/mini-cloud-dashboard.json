@@ -138,7 +138,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "100 *\nsum by (namespace, pod, container, node) (\n  rate(container_cpu_usage_seconds_total{\n    namespace=~\"$namespace\",\n    pod=~\".+\",\n    container=~\".+\",\n    container!=\"POD\",\n    image=~\".+\"\n  }[$__rate_interval])\n)\n/\non (node) group_left\nmax by (node) (machine_cpu_cores)",
+          "expr": "100 *\navg by (namespace, pod, container, node) (\n  rate(container_cpu_usage_seconds_total{\n    namespace=~\"$namespace\",\n    pod=~\".+\",\n    container=~\".+\",\n    container!=\"POD\",\n    image=~\".+\"\n  }[$__rate_interval])\n)\n/\non (node) group_left\nmax by (node) (machine_cpu_cores)",
           "hide": false,
           "instant": false,
           "legendFormat": "{{namespace}}: {{container}}",
@@ -168,7 +168,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 18,
+            "fillOpacity": 9,
             "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
@@ -196,6 +196,7 @@
               "mode": "off"
             }
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -269,8 +270,8 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "editorMode": "builder",
-          "expr": "sum by(container, namespace) (container_memory_usage_bytes{container!~\"\", namespace=~\"$namespace\"})",
+          "editorMode": "code",
+          "expr": "max by (namespace, pod, container) (\n  container_memory_working_set_bytes{namespace=~\"$namespace\", container!=\"\", container!=\"POD\", image!=\"\"}\n)",
           "hide": false,
           "instant": false,
           "legendFormat": "{{namespace}}: {{container}}",
@@ -428,7 +429,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(namespace, pod) (rate(container_network_receive_bytes_total{namespace=~\"$namespace\", pod!=\"\", interface!=\"lo\"}[$__rate_interval]))",
+          "expr": "max by(namespace, pod) (rate(container_network_receive_bytes_total{namespace=~\"$namespace\", pod!=\"\", interface!=\"lo\"}[$__rate_interval]))",
           "hide": false,
           "instant": false,
           "legendFormat": "Rx {{namespace}}: {{pod}}",
@@ -441,7 +442,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(namespace, pod) (rate(container_network_transmit_bytes_total{namespace=~\"$namespace\", pod!=\"\", interface!=\"lo\"}[$__rate_interval]))",
+          "expr": "max by(namespace, pod) (rate(container_network_transmit_bytes_total{namespace=~\"$namespace\", pod!=\"\", interface!=\"lo\"}[$__rate_interval]))",
           "hide": false,
           "instant": false,
           "legendFormat": "Tx {{namespace}}: {{pod}}",
@@ -1005,12 +1006,12 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "America/New_York",
   "title": "Mini Cloud Dashboard",
   "uid": "7d57716318ee0dddbac5a7f451fb7754",
-  "version": 10
+  "version": 18
 }
