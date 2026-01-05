@@ -23,7 +23,3 @@
     dest: "{{ k3s.kubeconfig.local }}"
     flat: yes
   tags: get-kubeconfig
-
-# - name: Debian Tasks
-#   ansible.builtin.include_tasks: debian.yml
-#   when: ansible_facts['os_family'] == 'Debian'

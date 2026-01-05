@@ -1,3 +1,29 @@
+- name: Ensure hostname is in /etc/hosts
+  become: true
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^\s*{{ static_ip.address }}\s+'
+    line: "{{ static_ip.address }} {{ static_ip.hostname | default(ansible_facts['hostname']) }} {{ ansible_facts['hostname'] }} {{ ansible_facts['fqdn'] | default(ansible_facts['hostname']) }}"
+    state: presente 
+    backup: true
+
+- name: Change hostname
+  become: true
+  hostname: "{{ static_ip.hostname }}"
+  register: hostname_result
+  changed_when: true
+
+- name: Verify hostname change
+  become: true
+  command: hostname
+  register: hostname_result
+  changed_when: false
+  when: hostname_result.stdout != static_ip.hostname
+
+- name: Display hostname change
+  debug:
+    var: hostname_result.stdout
+    
 - name: Ensure netplan is installed
   become: true
   apt:
@@ -54,15 +80,6 @@
   command: netplan apply
   register: netplan_apply_result
   changed_when: true
-
-- name: Ensure hostname is in /etc/hosts
-  become: true
-  lineinfile:
-    path: /etc/hosts
-    regexp: '^\s*{{ static_ip.address }}\s+'
-    line: "{{ static_ip.address }} {{ static_ip.hostname | default(ansible_facts['hostname']) }} {{ ansible_facts['hostname'] }} {{ ansible_facts['fqdn'] | default(ansible_facts['hostname']) }}"
-    state: present
-    backup: true
 
 - name: Verify static IP configuration
   become: true

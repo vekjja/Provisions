@@ -4,8 +4,4 @@
 
 - name: Darwin Tasks
   ansible.builtin.include_tasks: darwin.yml
-  when: ansible_facts['distribution'] == 'Darwin'
-
-- name: Windows Tasks
-  ansible.builtin.include_tasks: windows.yml
-  when: ansible_facts['distribution'] == 'Windows'
+  when: ansible_facts['distribution'] == 'Darwin' and golang is defined

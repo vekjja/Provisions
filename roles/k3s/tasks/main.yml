@@ -1,5 +1,5 @@
 # vim:ft=ansible
 - name: Unix Tasks
   ansible.builtin.include_tasks: unix.yml
-  when: ansible_facts['distribution'] != 'Windows' and (k3s is defined)
+  when: k3s is defined
   tags: [k3s, get-kubeconfig]
