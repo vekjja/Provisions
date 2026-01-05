@@ -63,7 +63,7 @@ function gprune() {
 }
 function gpa() {
   git add --all
-  git commit -am ${1}
+  git commit -a ${1:+-m "$1"}
   git push
 }
 

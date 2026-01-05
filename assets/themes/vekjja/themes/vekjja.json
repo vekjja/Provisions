@@ -3,7 +3,7 @@
     "name": "Vekjja",
     "type": "dark",
     "colors": {
-        "editor.background": "#161616",
+        "editor.background": "#0e0e0e",
         "editor.foreground": "#eaeaea",
         "editor.selectionBackground": "#FFFFFF25",
         "editor.selectionHighlightBackground": "#FFFFFF25",
@@ -25,7 +25,7 @@
         "editorInlayHint.foreground": "#A0A0A0",
         "editorInlayHint.background": "#1C1C1C",
         // Sidebar 
-        "sideBar.background": "#161616",
+        "sideBar.background": "#0e0e0e",
         "sideBarTitle.foreground": "#A0A0A0",
         "sideBarSectionHeader.foreground": "#eaeaea",
         "sideBarSectionHeader.background": "#2f2f2f",
@@ -36,7 +36,7 @@
         "activityBarBadge.background": "#FFC799",
         "activityBarBadge.foreground": "#000",
         // Title bar 
-        "titleBar.activeBackground": "#161616",
+        "titleBar.activeBackground": "#0e0e0e",
         "titleBar.inactiveBackground": "#1a1a1a",
         "titleBar.activeForeground": "#eaeaea",
         "titleBar.inactiveForeground": "#939393",
