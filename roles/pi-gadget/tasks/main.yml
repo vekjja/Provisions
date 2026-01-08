@@ -1,0 +1,4 @@
+- name: Include Raspberry Pi Gadget Tasks
+  ansible.builtin.include_tasks: pi-gadget.yml
+  when: vars['pi-gadget'] is defined
+  tags: pi-gadget

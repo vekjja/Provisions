@@ -5,6 +5,7 @@ macbook ansible_connection=local
 
 [remote]
 pi-cloud
+pi-gadget
 mini-cloud
 
 #[windows]

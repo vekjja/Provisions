@@ -1,0 +1,33 @@
+
+- name: Update apt cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install dhcpcd5
+  become: true
+  ansible.builtin.apt:
+    name:
+      - dhcpcd5
+    state: present
+
+- name: Configure dhcpcd
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/dhcpcd.conf
+    create: true
+    marker: "# {mark} ANSIBLE MANAGED BLOCK (pi-gadget usb networking)"
+    block: |
+      interface {{ vars['pi-gadget'].dhcpcd.interface | default('usb0') }}
+      static ip_address={{ vars['pi-gadget'].dhcpcd.address | default('100.0.0.10/24') }}
+      static routers={{ vars['pi-gadget'].dhcpcd.routes | default('100.0.0.1') }}
+      static domain_name_servers={{ (vars['pi-gadget'].dhcpcd.nameservers | default(['8.8.8.8', '1.1.1.1'])) | join(' ') }}
+  register: dhcpcd_conf
+
+- name: Restart dhcpcd
+  become: true
+  ansible.builtin.service:
+    name: dhcpcd
+    state: restarted
+  when: dhcpcd_conf.changed
