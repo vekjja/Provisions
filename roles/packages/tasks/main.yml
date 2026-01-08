@@ -1,8 +1,22 @@
-# vim:ft=ansible
-- name: Unix Tasks
-  ansible.builtin.include_tasks: unix.yml
-  when: ansible_facts['distribution'] != 'Windows'
+- name: Set Privilege Escalation Requirements
+  ansible.builtin.set_fact:
+    use_sudo: "{{ ansible_facts['os_family'] != 'Darwin' }}"
 
-- name: Windows Tasks
-  ansible.builtin.include_tasks: windows.yml
-  when: ansible_facts['distribution'] == 'Windows'
+- name: Install Unix Packages
+  ansible.builtin.package:
+    name: "{{ unix_packages }}"
+    state: present
+  become: "{{ use_sudo }}"
+  become_flags: "-n"
+  when: unix_packages is defined
+
+- name: Install OS-Specific Packages (Mac/Linux)
+  ansible.builtin.package:
+    name: "{{ packages | default([]) }}"
+    state: present
+  become: "{{ use_sudo }}"
+  when: packages is defined
+
+- name: Include Darwin Tasks
+  ansible.builtin.include_tasks: darwin.yml
+  when: ansible_facts['os_family'] == 'Darwin'

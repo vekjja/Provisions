@@ -1,5 +1,5 @@
 
-- name: Kali Tasks
-  ansible.builtin.include_tasks: kali.yml
-  when: ansible_facts['distribution'] == 'Kali'
-  tags: kali
+# - name: Kali Tasks
+#   ansible.builtin.include_tasks: kali.yml
+#   when: ansible_facts['distribution'] == 'Kali'
+#   tags: kali

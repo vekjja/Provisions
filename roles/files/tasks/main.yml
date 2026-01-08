@@ -1,4 +1,4 @@
-- name: Link OS-Specific Files (Local Group)
+- name: Link Files (Local User)
   ansible.builtin.file:
     src: "{{ lookup('pipe', 'realpath ' + inventory_dir + '/../assets/' + item.src) }}"
     dest: "{{ item.dest }}"
@@ -6,21 +6,22 @@
     state: link
     force: true
     follow: false
-  loop: "{{ files | default([]) }}"
-  when: ansible_facts['os_family'] != "Windows" and 'local' in group_names
+  loop: "{{ files.user | default([]) }}"
+  when: "'local' in group_names"
 
-- name: Copy OS-Specific Files (Remote Group)
-  when: ansible_facts['os_family'] != "Windows" and 'remote' in group_names
+- name: Copy Files (Remote User)
   ansible.builtin.copy:
     src: "{{ lookup('pipe', 'realpath ' + inventory_dir + '/../assets/' + item.src) }}"
     dest: "{{ item.dest }}"
     mode: "0644"
-  loop: "{{ files | default([]) }}"
+  loop: "{{ files.user | default([]) }}"
+  when: "'remote' in group_names"
 
-- name: Copy OS-Specific Files (Windows)
-  when: ansible_facts['os_family'] == "Windows"
+- name: Copy Files (Remote Root)
+  become: true
   ansible.builtin.copy:
     src: "{{ lookup('pipe', 'realpath ' + inventory_dir + '/../assets/' + item.src) }}"
     dest: "{{ item.dest }}"
     mode: "0644"
-  loop: "{{ files | default([]) }}"
+  loop: "{{ files.root | default([]) }}"
+  when: "'remote' in group_names"

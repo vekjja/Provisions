@@ -1,7 +1,3 @@
 - name: Debian Tasks
   ansible.builtin.include_tasks: debian.yml
   when: ansible_facts['os_family'] == 'Debian' and static_ip is defined
-
-- name: RedHat Tasks
-  ansible.builtin.include_tasks: redhat.yml
-  when: ansible_facts['os_family'] == 'RedHat' and static_ip is defined

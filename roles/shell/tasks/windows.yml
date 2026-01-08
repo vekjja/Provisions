@@ -1,4 +1,0 @@
-- name: Install Oh My Posh
-  ansible.builtin.win_chocolatey:
-    name: oh-my-posh
-    state: present

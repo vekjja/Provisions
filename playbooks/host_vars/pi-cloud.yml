@@ -1,0 +1,28 @@
+
+nerd_fonts: []
+
+files:
+  user:
+  - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
+  - { src: 'dotfiles/.zshrc-linux', dest: '~/.zshrc' }
+  - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
+  - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
+  root:
+  - { src: 'dotfiles/.vimrc', dest: '/root/.vimrc' }
+  - { src: 'dotfiles/.zshrc-linux', dest: '/root/.zshrc' }
+  - { src: 'dotfiles/.zshrc-common', dest: '/root/.zshrc-common' }
+  - { src: 'themes/oh-my-posh/kev.omp.json', dest: '/root/.kev.omp.json' }
+
+firewall_rules:
+  - { port: '22', proto: 'tcp', comment: 'SSH', from: '10.0.0.0/16' }
+
+static_ip:
+  hostname: pi-cloud  # Hostname to add to /etc/hosts
+  interface: wlan0  # Network interface name (use 'ip a' to find)
+  gateway: 10.0.0.1 # Gateway IP address
+  address: 10.0.0.9  # Static IP address
+  netmask: 16 # Subnet mask
+  nameservers:
+    - 10.0.0.1
+    - 1.1.1.1
+    - 8.8.8.8

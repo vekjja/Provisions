@@ -4,6 +4,7 @@ packages:
   - k9s
 
 files:
+  user:
   - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
   - { src: 'dotfiles/.zshrc-linux', dest: '~/.zshrc' }
   - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
@@ -18,11 +19,6 @@ firewall_rules:
   - { port: '139', proto: 'tcp', comment: 'SMB NetBIOS session', from: '10.0.0.0/16' }
   - { port: '138', proto: 'udp', comment: 'SMB NetBIOS datagram', from: '10.0.0.0/16' }
   - { port: '51820', proto: 'udp', comment: 'WireGuard VPN' }
-  # - { port: '25', proto: 'tcp', comment: 'SMTP' }
-  # - { port: '143', proto: 'tcp', comment: 'IMAP' }
-  # - { port: '993', proto: 'tcp', comment: 'IMAPS' }
-  # - { port: '465', proto: 'tcp', comment: 'SMTPS' }
-  # - { port: '587', proto: 'tcp', comment: 'SMTP Submission' }
 
 static_ip:
   hostname: mini-cloud  # Hostname to add to /etc/hosts

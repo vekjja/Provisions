@@ -1,11 +1,11 @@
 - name: Unix Tasks
   ansible.builtin.include_tasks: unix.yml
-  when: ansible_facts['os_family'] not in ['Darwin', 'Windows']
+  when: ansible_facts['os_family'] not in ['Darwin', 'Windows'] and nerd_fonts is defined
 
 - name: Darwin Tasks
   ansible.builtin.include_tasks: darwin.yml
-  when: ansible_facts['os_family'] == 'Darwin'
+  when: ansible_facts['os_family'] == 'Darwin' and nerd_fonts is defined
 
 - name: Windows Tasks
   ansible.builtin.include_tasks: windows.yml
-  when: ansible_facts['os_family'] == 'Windows'
+  when: ansible_facts['os_family'] == 'Windows' and nerd_fonts is defined

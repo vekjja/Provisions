@@ -15,9 +15,9 @@
     - { role: smb, tags: ['smb', 'filesystem'] }
     - { role: nfs, tags: ['nfs', 'filesystem'] }
 
-    - { role: ufw, tags: ['ufw', 'network'] }
-    - { role: static-ip, tags: ['static-ip', 'network'] }
-    - { role: wireguard, tags: ['wireguard', 'wg', 'network'] }
+    - { role: ufw, tags: ['ufw', 'network', 'net'] }
+    - { role: static-ip, tags: ['static-ip', 'network', 'net'] }
+    - { role: wireguard, tags: ['wireguard', 'wg', 'network', 'net'] }
 
     - { role: nerd-fonts, tags: ['nerd-fonts'] }
     - { role: golang, tags: ['go'] }
