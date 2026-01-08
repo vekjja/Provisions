@@ -38,6 +38,8 @@ k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
   args:
     - --disable=traefik
     - --tls-san 10.0.0.10
+    - --tls-san livingroom.cloud
+    - --bind-address=10.0.0.10
     - --disable=servicelb
     - --prefer-bundled-bin
     - --write-kubeconfig-mode 644
