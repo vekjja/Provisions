@@ -13,11 +13,11 @@ files:
 firewall_rules:
   - { port: '22', proto: 'tcp', comment: 'SSH', from: '10.0.0.0/16' }
   - { port: '3389', proto: 'tcp', comment: 'RDP', from: '10.0.0.0/16' }
-  - { port: '6443', proto: 'tcp', comment: 'Kubernetes API', from: '10.0.0.0/16' }
   - { port: '445', proto: 'tcp', comment: 'SMB over TCP', from: '10.0.0.0/16' }
   - { port: '137', proto: 'udp', comment: 'SMB NetBIOS name', from: '10.0.0.0/16' }
   - { port: '139', proto: 'tcp', comment: 'SMB NetBIOS session', from: '10.0.0.0/16' }
   - { port: '138', proto: 'udp', comment: 'SMB NetBIOS datagram', from: '10.0.0.0/16' }
+  - { port: '6443', proto: 'tcp', comment: 'Kubernetes API' }
   - { port: '51820', proto: 'udp', comment: 'WireGuard VPN' }
 
 static_ip:
