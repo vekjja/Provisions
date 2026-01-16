@@ -230,7 +230,7 @@
     "ansible.validation.lint.enabled": false,
     "typescript.updateImportsOnFileMove.enabled": "always",
     "terminal.integrated.fontLigatures.featureSettings": "\"calt\" on, \"liga\" on",
-    "workbench.iconTheme": "symbols",
+    "workbench.iconTheme": "no-pixie-purple-icons",
     "editor.cursorBlinking": "smooth",
     "editor.cursorSurroundingLines": 1,
     "workbench.panel.showLabels": false,

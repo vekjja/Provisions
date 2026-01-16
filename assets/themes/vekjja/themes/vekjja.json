@@ -73,10 +73,10 @@
         "input.background": "#1C1C1C",
         "selection.background": "#666",
         // Brackets 
-        "editorBracketHighlight.foreground1": "#ff7dc7",
+        "editorBracketHighlight.foreground1": "#a7619b",
         "editorBracketHighlight.foreground2": "#939393",
         "editorBracketHighlight.foreground3": "#8dfdff",
-        "editorBracketHighlight.foreground4": "#ff7dc7",
+        "editorBracketHighlight.foreground4": "#a7619b",
         "editorBracketHighlight.foreground5": "#939393",
         "editorBracketHighlight.foreground6": "#8dfdff",
         "editorBracketHighlight.unexpectedBracket.foreground": "#FF8080",
@@ -721,7 +721,7 @@
                 "constant.language.false.cpp",
             ],
             "settings": {
-                "foreground": "#ff7dc7"
+                "foreground": "#a7619b"
             }
         },
     ]
