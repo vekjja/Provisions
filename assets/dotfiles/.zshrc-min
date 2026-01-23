@@ -10,9 +10,11 @@ export PATH="$PATH:$HOME/.local/bin"
 # if ~/.oh-my-zsh does not exist, install it
 if [ ! -d "$ZSH" ]; then
 
-  sudo apt install zsh
-  sudo apt install autojump
-  sudo apt install zsh-autosuggestions
+  sudo apt install -y \
+    zsh \
+    autojump \
+    zsh-autosuggestions \
+    zsh-syntax-highlighting
 
   echo "Installing Oh My Zsh..."
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
@@ -87,6 +89,7 @@ function gpa() {
 export DOCKER_BUILDKIT=1
 alias d="docker"
 alias dc="docker-compose"
+alias dl="docker logs -fn 100"
 
 #### Autojump ####
 if [ $commands[autojump] ]; then                             # check if autojump is installed
