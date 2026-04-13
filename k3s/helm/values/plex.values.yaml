@@ -23,7 +23,7 @@ podSecurityContext: {} # fsGroup: 2000
 securityContext: {}
 
 # Plex claim token from https://plex.tv/claim
-claimToken: "claim-R8yyapwMJ9ymk5UE91qX"
+claimToken: "claim-K1NthaFNrh-ZgzMxhqsn"
 
 # Set the timezone of the plex server
 timezone: America/New_York
