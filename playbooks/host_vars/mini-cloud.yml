@@ -74,9 +74,9 @@ fs_mounts:
 }
 - {
   path: /mnt/ssd/pny250,
-  src: "UUID=1DAC99F73EFA9CB8",
-  fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  src: "UUID=eb546323-72db-4808-a70f-ae8ddeb2da33",
+  fstype: ext4,
+  opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
 }
 - {
   path: /mnt/hdd/tera,
