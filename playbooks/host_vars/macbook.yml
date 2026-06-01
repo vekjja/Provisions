@@ -2,27 +2,26 @@ ansible_python_interpreter: /opt/homebrew/bin/python3.14
 
 files:
   user:
-  - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
-  - { src: 'dotfiles/.bashrc', dest: '~/.bashrc' }
-  - { src: 'dotfiles/.zshrc-mac', dest: '~/.zshrc' }
-  - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
-  - { src: 'configs/ssh.config', dest: '~/.ssh/config' }
-  - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
-  - { src: 'themes/vekjja', dest: '~/.cursor/extensions/vekjja.vekjja-theme-1.0.0' }
+    - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
+    - { src: 'dotfiles/.bashrc', dest: '~/.bashrc' }
+    - { src: 'dotfiles/.zshrc-mac', dest: '~/.zshrc' }
+    - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
+    - { src: 'configs/ssh.config', dest: '~/.ssh/config' }
+    - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
+    - { src: 'themes/vekjja', dest: '~/.cursor/extensions/vekjja.vekjja-theme-1.0.0' }
 
 casks:
-- aptakube
-- beekeeper-studio
-- cursor
-- google-chrome
-- iterm2
-- spotify
-- thebrowsercompany-dia
-- mimestream
+  - aptakube
+  - beekeeper-studio
+  - cursor
+  - google-chrome
+  - iterm2
+  - spotify
+  - visual-studio-code
 
 packages:
-- helm
-- iterm2
-- k9s
-- kubectl
-- kubectx
+  - helm
+  - iterm2
+  - k9s
+  - kubectl
+  - kubectx
