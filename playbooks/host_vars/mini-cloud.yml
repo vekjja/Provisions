@@ -1,14 +1,13 @@
-
 packages:
   - kubectx
   - k9s
 
 files:
   user:
-  - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
-  - { src: 'dotfiles/.zshrc-linux', dest: '~/.zshrc' }
-  - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
-  - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
+    - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
+    - { src: 'dotfiles/.zshrc-linux', dest: '~/.zshrc' }
+    - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
+    - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
 
 firewall_rules:
   - { port: '22', proto: 'tcp', comment: 'SSH', from: '10.0.0.0/16' }
@@ -32,7 +31,7 @@ static_ip:
     - 8.8.8.8
 
 k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
-  kubeconfig: 
+  kubeconfig:
     remote: ~/.kube/k3sconfig
     local: "{{ lookup('env', 'HOME') }}/.kube/mini-cloud"
   args:
@@ -60,36 +59,36 @@ wireguard:
           allowed_ips: 10.0.10.4/32
 
 fs_mounts:
-- {
-  path: /mnt/ssd/movies,
-  src: "UUID=0CB81103B810ED48",
-  fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
-}
-- {
-  path: /mnt/ssd/series,
-  src: "UUID=56885E3A885E18B7",
-  fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
-}
-- {
-  path: /mnt/ssd/pny250,
-  src: "UUID=eb546323-72db-4808-a70f-ae8ddeb2da33",
-  fstype: ext4,
-  opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
-}
-- {
-  path: /mnt/hdd/tera,
-  src: "UUID=D4504CF8504CE33A",
-  fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro"
-}
-- {
-  path: /mnt/hdd/barracuda,
-  src: "UUID=24FEA26DFEA236C8",
-  fstype: ntfs,
-  opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5"
-}
+  - {
+    path: /mnt/ssd/movies,
+    src: "UUID=0CB81103B810ED48",
+    fstype: ntfs,
+    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  }
+  - {
+    path: /mnt/ssd/series,
+    src: "UUID=56885E3A885E18B7",
+    fstype: ntfs,
+    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  }
+  - {
+    path: /mnt/ssd/pny250,
+    src: "UUID=eb546323-72db-4808-a70f-ae8ddeb2da33",
+    fstype: ext4,
+    opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  }
+  - {
+    path: /mnt/hdd/tera,
+    src: "UUID=D4504CF8504CE33A",
+    fstype: ntfs,
+    opts: "defaults,nobootwait,nofail,errors=remount-ro"
+  }
+  - {
+    path: /mnt/hdd/barracuda,
+    src: "UUID=24FEA26DFEA236C8",
+    fstype: ntfs,
+    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5"
+  }
 
 # nfs_shares:
 #   - /mnt/hdd/tera *(rw,no_root_squash,insecure,async,no_subtree_check,anonuid=1000,anongid=1000)
@@ -98,31 +97,19 @@ smb_shares:
   - name: tera
     path: /mnt/hdd/tera
     comment: Tera share
-    browseable: yes
-    read_only: no
-    guest_ok: no
     valid_users: cloudmin
     force_user: cloudmin
 
   - name: barracuda
     path: /mnt/hdd/barracuda
     comment: Barracuda share
-    browseable: yes
-    read_only: no
-    guest_ok: no
     valid_users: cloudmin
     force_user: cloudmin
 
   - name: movies
     path: /mnt/ssd/movies
     comment: Movies share
-    browseable: yes
-    read_only: yes
-    guest_ok: yes
 
   - name: series
     path: /mnt/ssd/series
     comment: Series share
-    browseable: yes
-    read_only: yes
-    guest_ok: yes

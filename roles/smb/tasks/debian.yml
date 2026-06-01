@@ -1,6 +1,6 @@
 - name: Install Samba Server Packages
   become: true
-  apt:
+  ansible.builtin.apt:
     pkg:
       - samba
       - samba-common-bin
@@ -9,7 +9,7 @@
 
 - name: Ensure share directories exist
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
     mode: "{{ item.mode | default('0775') }}"
@@ -19,19 +19,25 @@
 
 - name: Deploy Samba configuration
   become: true
-  template:
+  ansible.builtin.template:
     src: smb.conf.j2
     dest: /etc/samba/smb.conf
     backup: true
   notify: restart samba
 
-- name: Extract and flatten SMB users from shares
-  set_fact:
-    smb_users_unique: "{{ (smb_shares | default([]) | selectattr('valid_users', 'defined') | map(attribute='valid_users') | list | map('split', ',') | flatten | map('trim') | list | unique) | default([]) }}"
+- name: Extract SMB valid_users lists
+  ansible.builtin.set_fact:
+    smb_share_valid_users: >-
+      {{ smb_shares | default([]) | selectattr('valid_users', 'defined') | map(attribute='valid_users') | list }}
+
+- name: Build unique SMB users list
+  ansible.builtin.set_fact:
+    smb_users_unique: >-
+      {{ (smb_share_valid_users | default([]) | map('split', ',') | flatten | map('trim') | list | unique) | default([]) }}
 
 - name: Debug - Check if smb_user_password is defined
-  debug:
-    msg: 
+  ansible.builtin.debug:
+    msg:
       - "smb_user_password is {{ 'defined' if smb_user_password is defined else 'NOT defined' }}"
       - "smb_user_check.results is {{ 'defined' if smb_user_check.results is defined else 'NOT defined' }}"
       - "Number of results: {{ smb_user_check.results | default([]) | length }}"
@@ -39,7 +45,7 @@
 
 - name: Check if SMB user exists
   become: true
-  command: pdbedit -L -v "{{ item }}"
+  ansible.builtin.command: pdbedit -L -v "{{ item }}"
   register: smb_user_check
   changed_when: false
   failed_when: false
@@ -49,8 +55,10 @@
 
 - name: Add SMB user with password if not exists
   become: true
-  shell: |
-    (echo "{{ smb_user_password }}"; echo "{{ smb_user_password }}") | smbpasswd -a -s "{{ item.item }}"
+  ansible.builtin.shell: |
+    set -o pipefail
+    (echo "{{ smb_user_password }}"; echo "{{ smb_user_password }}") \
+      | smbpasswd -a -s "{{ item.item }}"
   when:
     - smb_user_check.results is defined
     - item.rc != 0
@@ -62,8 +70,10 @@
 
 - name: Set password for existing SMB user
   become: true
-  shell: |
-    (echo "{{ smb_user_password }}"; echo "{{ smb_user_password }}") | smbpasswd -s "{{ item.item }}"
+  ansible.builtin.shell: |
+    set -o pipefail
+    (echo "{{ smb_user_password }}"; echo "{{ smb_user_password }}") \
+      | smbpasswd -s "{{ item.item }}"
   when:
     - smb_user_check.results is defined
     - item.rc == 0
@@ -86,4 +96,3 @@
     name: nmbd
     enabled: true
     state: started
-
