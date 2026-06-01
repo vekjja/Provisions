@@ -1,12 +1,12 @@
 - name: Update apt cache
   become: true
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
 
 - name: Install WireGuard packages
   become: true
-  apt:
+  ansible.builtin.apt:
     pkg:
       - wireguard
       - wireguard-tools
@@ -14,7 +14,7 @@
 
 - name: Enable IP forwarding
   become: true
-  sysctl:
+  ansible.builtin.sysctl:
     name: net.ipv4.ip_forward
     value: '1'
     state: present
@@ -22,14 +22,14 @@
     reload: true
 
 - name: Set WireGuard configuration variable
-  set_fact:
-    wg_config: "{{ wireguard | default({}) }}"
+  ansible.builtin.set_fact:
+    wireguard_config: "{{ wireguard | default({}) }}"
   when: wireguard is defined
 
 - name: Ensure WireGuard directories exist
   become: true
-  when: wg_config.interfaces is defined
-  file:
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: '0700'
@@ -41,26 +41,28 @@
 
 - name: Generate server keys
   become: true
-  when: wg_config.interfaces is defined
-  shell: |
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.shell: |
+    set -o pipefail
     if [ ! -f /etc/wireguard/{{ item.name }}_private.key ]; then
-      wg genkey | tee /etc/wireguard/{{ item.name }}_private.key | wg pubkey > /etc/wireguard/{{ item.name }}_public.key
+      wg genkey | tee /etc/wireguard/{{ item.name }}_private.key \
+        | wg pubkey > /etc/wireguard/{{ item.name }}_public.key
       chmod 600 /etc/wireguard/{{ item.name }}_private.key
       chmod 644 /etc/wireguard/{{ item.name }}_public.key
     fi
   args:
     creates: /etc/wireguard/{{ item.name }}_private.key
-  loop: "{{ wg_config.interfaces | default([]) }}"
+  loop: "{{ wireguard_config.interfaces | default([]) }}"
   loop_control:
     label: "{{ item.name }}"
 
 - name: Read server public keys
   become: true
-  when: wg_config.interfaces is defined
-  slurp:
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.slurp:
     src: /etc/wireguard/{{ item.name }}_public.key
-  loop: "{{ wg_config.interfaces | default([]) }}"
-  register: wg_server_public_keys
+  loop: "{{ wireguard_config.interfaces | default([]) }}"
+  register: wireguard_server_public_keys
   changed_when: false
   loop_control:
     label: "{{ item.name }}"
@@ -68,220 +70,252 @@
 - name: Read server private keys
   become: true
   when:
-    - wg_config.interfaces is defined
+    - wireguard_config.interfaces is defined
     - item.private_key is not defined
-  slurp:
+  ansible.builtin.slurp:
     src: /etc/wireguard/{{ item.name }}_private.key
-  loop: "{{ wg_config.interfaces | default([]) }}"
-  register: wg_private_keys
+  loop: "{{ wireguard_config.interfaces | default([]) }}"
+  register: wireguard_private_keys
   changed_when: false
   loop_control:
     label: "{{ item.name }}"
 
 - name: Build server public key map
-  when: wg_config.interfaces is defined
-  set_fact:
-    wg_server_public_key_map: "{{ wg_server_public_key_map | default({}) | combine({item.item.name: item.content | b64decode | trim}) }}"
-  loop: "{{ wg_server_public_keys.results | default([]) | selectattr('content', 'defined') | list }}"
+  when: wireguard_config.interfaces is defined
+  vars:
+    wireguard_server_public_key_sources: >-
+      {{ wireguard_server_public_keys.results | default([]) | selectattr('content', 'defined') | list }}
+  ansible.builtin.set_fact:
+    wireguard_server_public_key_map: >-
+      {{ wireguard_server_public_key_map | default({}) |
+         combine({item.item.name: item.content | b64decode | trim}) }}
+  loop: "{{ wireguard_server_public_key_sources }}"
 
 - name: Build server private key map
   when:
-    - wg_config.interfaces is defined
-    - wg_private_keys is defined
-  set_fact:
-    wg_private_key_map: "{{ wg_private_key_map | default({}) | combine({item.item.name: item.content | b64decode | trim}) }}"
-  loop: "{{ wg_private_keys.results | default([]) | selectattr('item.private_key', 'undefined') | selectattr('content', 'defined') | list }}"
+    - wireguard_config.interfaces is defined
+    - wireguard_private_keys is defined
+  vars:
+    wireguard_private_key_sources: >-
+      {{ wireguard_private_keys.results | default([]) | selectattr('item.private_key', 'undefined') | selectattr('content', 'defined') | list }}
+  ansible.builtin.set_fact:
+    wireguard_private_key_map: >-
+      {{ wireguard_private_key_map | default({}) |
+         combine({item.item.name: item.content | b64decode | trim}) }}
+  loop: "{{ wireguard_private_key_sources }}"
 
 - name: Generate client keys
   become: true
   when:
-    - wg_config.interfaces is defined
+    - wireguard_config.interfaces is defined
     - item.1 is defined
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     if [ ! -f /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_private.key ]; then
-      wg genkey | tee /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_private.key | wg pubkey > /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_public.key
+      wg genkey | tee /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_private.key \
+        | wg pubkey > /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_public.key
       chmod 600 /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_private.key
       chmod 644 /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_public.key
     fi
   args:
     creates: /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_private.key
   with_subelements:
-    - "{{ wg_config.interfaces | default([]) }}"
+    - "{{ wireguard_config.interfaces | default([]) }}"
     - peers
 
 - name: Read client public keys
   become: true
-  when: wg_config.interfaces is defined
-  slurp:
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.slurp:
     src: /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_public.key
   with_subelements:
-    - "{{ wg_config.interfaces | default([]) }}"
+    - "{{ wireguard_config.interfaces | default([]) }}"
     - peers
-  register: wg_client_public_keys
+  register: wireguard_client_public_keys
   changed_when: false
   ignore_errors: true
 
 - name: Read client private keys
   become: true
   when:
-    - wg_config.interfaces is defined
-    - wg_config.server_endpoint is defined
-  slurp:
+    - wireguard_config.interfaces is defined
+    - wireguard_config.server_endpoint is defined
+  ansible.builtin.slurp:
     src: /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}_private.key
   with_subelements:
-    - "{{ wg_config.interfaces | default([]) }}"
+    - "{{ wireguard_config.interfaces | default([]) }}"
     - peers
-  register: wg_client_private_keys
+  register: wireguard_client_private_keys
   changed_when: false
 
 - name: Build client key maps
-  when: wg_config.interfaces is defined
-  set_fact:
-    wg_client_public_key_map: "{{ wg_client_public_key_map | default({}) | combine({(item.item.0.name + '_' + item.item.1.name): item.content | b64decode | trim}) }}"
-  loop: "{{ wg_client_public_keys.results | default([]) | selectattr('content', 'defined') | list }}"
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.set_fact:
+    wireguard_client_public_key_map: >-
+      {{ wireguard_client_public_key_map | default({}) |
+         combine({(item.item.0.name + '_' + item.item.1.name): item.content | b64decode | trim}) }}
+  vars:
+    wireguard_client_public_key_sources: >-
+      {{ wireguard_client_public_keys.results | default([]) | selectattr('content', 'defined') | list }}
+  loop: "{{ wireguard_client_public_key_sources }}"
+
+- name: Build client private key map
+  when:
+    - wireguard_config.interfaces is defined
+    - wireguard_client_private_keys is defined
+  vars:
+    wireguard_client_private_key_sources: >-
+      {{ wireguard_client_private_keys.results | default([]) | selectattr('content', 'defined') | list }}
+  ansible.builtin.set_fact:
+    wireguard_client_private_key_map: >-
+      {{ wireguard_client_private_key_map | default({}) |
+         combine({(item.item.0.name + '_' + item.item.1.name): item.content | b64decode | trim}) }}
+  loop: "{{ wireguard_client_private_key_sources }}"
 
 - name: Get default network interface for NAT
   become: true
-  when: wg_config.interfaces is defined
-  shell: ip route | grep default | awk '{print $5}' | head -1
-  register: wg_default_interface
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.shell: |
+    set -o pipefail
+    ip route | grep default | awk '{print $5}' | head -1
+  register: wireguard_default_interface
   changed_when: false
   failed_when: false
 
 - name: Validate peer configuration
   when:
-    - wg_config.interfaces is defined
+    - wireguard_config.interfaces is defined
     - item.1.allowed_ips is not defined
-  fail:
+  ansible.builtin.fail:
     msg: "Peer '{{ item.1.name }}' in interface '{{ item.0.name }}' is missing required 'allowed_ips' field"
   with_subelements:
-    - "{{ wg_config.interfaces | default([]) }}"
+    - "{{ wireguard_config.interfaces | default([]) }}"
     - peers
 
 - name: Create WireGuard interface configuration
   become: true
-  when: wg_config.interfaces is defined
-  template:
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.template:
     src: wg.conf.j2
     dest: /etc/wireguard/{{ item.name }}.conf
     mode: '0600'
     owner: root
     group: root
-  loop: "{{ wg_config.interfaces | default([]) }}"
+  loop: "{{ wireguard_config.interfaces | default([]) }}"
   loop_control:
     label: "{{ item.name }}"
   vars:
-    wg_client_public_key_map: "{{ wg_client_public_key_map | default({}) }}"
-    wg_nat_interface: "{{ static_ip.interface | default(wg_default_interface.stdout | default('eth0')) }}"
+    wg_client_public_key_map: "{{ wireguard_client_public_key_map | default({}) }}"
+    wg_nat_interface: "{{ static_ip.interface | default(wireguard_default_interface.stdout | default('eth0')) }}"
 
 - name: Get list of desired client names
-  when: wg_config.interfaces is defined
-  set_fact:
-    desired_client_names: "{{ desired_client_names | default([]) + [item.0.name + '_' + item.1.name] }}"
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.set_fact:
+    wireguard_desired_client_names: "{{ wireguard_desired_client_names | default([]) + [item.0.name + '_' + item.1.name] }}"
   with_subelements:
-    - "{{ wg_config.interfaces | default([]) }}"
+    - "{{ wireguard_config.interfaces | default([]) }}"
     - peers
 
 - name: Clean up orphaned client config files
   become: true
-  when: wg_config.interfaces is defined
-  find:
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.find:
     paths: /etc/wireguard/clients
     patterns: "*.conf"
     file_type: file
-  register: existing_client_configs
+  register: wireguard_existing_client_configs
   changed_when: false
 
 - name: Delete orphaned client config files
   become: true
   when:
-    - wg_config.interfaces is defined
-    - existing_client_configs.files is defined
-    - item.path | basename | replace('.conf', '') not in (desired_client_names | default([]))
-  file:
+    - wireguard_config.interfaces is defined
+    - wireguard_existing_client_configs.files is defined
+    - item.path | basename | replace('.conf', '') not in (wireguard_desired_client_names | default([]))
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
-  loop: "{{ existing_client_configs.files | default([]) }}"
+  loop: "{{ wireguard_existing_client_configs.files | default([]) }}"
   loop_control:
     label: "{{ item.path | basename }}"
 
 - name: Clean up orphaned client key files
   become: true
-  when: wg_config.interfaces is defined
-  find:
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.find:
     paths: /etc/wireguard/clients
     patterns: "*.key"
     file_type: file
-  register: existing_client_keys
+  register: wireguard_existing_client_keys
   changed_when: false
 
 - name: Delete orphaned client key files
   become: true
   when:
-    - wg_config.interfaces is defined
-    - existing_client_keys.files is defined
-    - (item.path | basename | regex_replace('_(private|public)\\.key$', '')) not in (desired_client_names | default([]))
-  file:
+    - wireguard_config.interfaces is defined
+    - wireguard_existing_client_keys.files is defined
+    - (item.path | basename | regex_replace('_(private|public)\\.key$', '')) not in (wireguard_desired_client_names | default([]))
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
-  loop: "{{ existing_client_keys.files | default([]) }}"
+  loop: "{{ wireguard_existing_client_keys.files | default([]) }}"
   loop_control:
     label: "{{ item.path | basename }}"
 
 - name: Create client configuration files
   become: true
   when:
-    - wg_config.interfaces is defined
-    - wg_config.server_endpoint is defined
-  template:
+    - wireguard_config.interfaces is defined
+    - wireguard_config.server_endpoint is defined
+  ansible.builtin.template:
     src: client.conf.j2
     dest: /etc/wireguard/clients/{{ item.0.name }}_{{ item.1.name }}.conf
     mode: '0600'
     owner: root
     group: root
   with_subelements:
-    - "{{ wg_config.interfaces | default([]) }}"
+    - "{{ wireguard_config.interfaces | default([]) }}"
     - peers
   vars:
     peer: "{{ item.1 }}"
-    client_private_key: "{{ wg_client_private_keys.results | selectattr('item.0.name', 'equalto', item.0.name) | selectattr('item.1.name', 'equalto', item.1.name) | map(attribute='content') | first | b64decode | trim }}"
-    server_public_key: "{{ wg_server_public_key_map[item.0.name] }}"
-    server_endpoint: "{{ wg_config.server_endpoint }}"
+    client_private_key: "{{ wireguard_client_private_key_map[item.0.name + '_' + item.1.name] | default('') }}"
+    server_public_key: "{{ wireguard_server_public_key_map[item.0.name] }}"
+    server_endpoint: "{{ wireguard_config.server_endpoint }}"
     client_address: "{{ item.1.allowed_ips }}"
 
 - name: Validate WireGuard configuration syntax
   become: true
-  when: wg_config.interfaces is defined
-  command: wg-quick strip {{ item.name }}
-  args:
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.command:
+    cmd: wg-quick strip {{ item.name }}
     chdir: /etc/wireguard
-  loop: "{{ wg_config.interfaces | default([]) }}"
+  loop: "{{ wireguard_config.interfaces | default([]) }}"
   loop_control:
     label: "{{ item.name }}"
-  register: wg_config_validate
+  register: wireguard_config_validate
   changed_when: false
-  failed_when: wg_config_validate.rc != 0
+  failed_when: wireguard_config_validate.rc != 0
 
 - name: Restart WireGuard interfaces
   become: true
-  when: wg_config.interfaces is defined
-  systemd:
+  when: wireguard_config.interfaces is defined
+  ansible.builtin.systemd:
     name: wg-quick@{{ item.name }}
     enabled: true
     state: restarted
-  loop: "{{ wg_config.interfaces | default([]) }}"
+  loop: "{{ wireguard_config.interfaces | default([]) }}"
   loop_control:
     label: "{{ item.name }}"
-  register: wg_service_start
+  register: wireguard_service_start
   failed_when: false
 
 - name: Show WireGuard service status on failure
   when:
-    - wg_service_start is defined
-    - wg_service_start.results | selectattr('failed', 'equalto', true) | list | length > 0
+    - wireguard_service_start is defined
+    - wireguard_service_start.results | selectattr('failed', 'equalto', true) | list | length > 0
     - item.failed | default(false)
-  debug:
-    msg: "WireGuard service failed to start. Check the config file at /etc/wireguard/{{ item.item.name }}.conf and run 'systemctl status wg-quick@{{ item.item.name }}.service' for details."
-  loop: "{{ wg_service_start.results | default([]) }}"
+  ansible.builtin.debug:
+    msg: "WireGuard {{ item.item.name }} failed. See /etc/wireguard/{{ item.item.name }}.conf and run: systemctl status wg-quick@{{ item.item.name }}.service"
+  loop: "{{ wireguard_service_start.results | default([]) }}"
   loop_control:
     label: "{{ item.item.name }}"
