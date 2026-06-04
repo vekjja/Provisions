@@ -1,5 +1,5 @@
 image:
-  tag: "3.3.0"
+  tag: "latest"
 
 deploymentMode: SingleBinary
 
