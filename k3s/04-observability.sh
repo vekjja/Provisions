@@ -9,18 +9,34 @@ helm repo update
 
 kubectl create namespace observability
 
-# Create Grafana admin credentials secret
+
+# Create Grafana admin credentials secret from GCP Secret Manager using External Secrets Operator
 cat <<EOF | kubectl apply -f -
 ---
-apiVersion: v1
-kind: Secret
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
 metadata:
   name: grafana-admin-credentials
   namespace: observability
-type: Opaque
-data:
-  admin-user: $(echo -n "admin" | base64)
-  admin-password: $(echo -n "n0JKYORwlxl220ZsdkjN1lWABCnvRn0+S7b2cBNccgQ=" | base64)
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcp-secret-manager
+    kind: ClusterSecretStore
+  target:
+    name: grafana-admin-credentials
+    creationPolicy: Owner
+    template:
+      type: Opaque
+  data:
+    - secretKey: admin-user
+      remoteRef:
+        key: grafana-env
+        property: admin-user
+    - secretKey: admin-password
+      remoteRef:
+        key: grafana-env
+        property: admin-password
 EOF
 
 # Install kube-prometheus-stack (includes Prometheus, Grafana, Alertmanager, Node Exporter, etc.)
