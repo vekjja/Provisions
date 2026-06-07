@@ -11,7 +11,7 @@
     - { role: shell, tags: ['shell', 'config'] }
     - { role: packages, tags: ['packages', 'config'] }
 
-    - { role: fstab, tags: ['fstab','filesystem'] }
+    - { role: fstab, tags: ['fstab', 'filesystem'] }
     - { role: smb, tags: ['smb', 'filesystem'] }
     - { role: nfs, tags: ['nfs', 'filesystem'] }
 
