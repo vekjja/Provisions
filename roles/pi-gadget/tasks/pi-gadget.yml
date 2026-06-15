@@ -1,9 +1,15 @@
-
 - name: Update apt cache
   become: true
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
+
+
+#  Install rpi-usb-gadget package and enable the gadget
+# sudo apt update
+# sudo apt install rpi-usb-gadget
+# sudo rpi-usb-gadget on
+# sudo reboot
 
 - name: Install dhcpcd5
   become: true
@@ -17,6 +23,7 @@
   ansible.builtin.blockinfile:
     path: /etc/dhcpcd.conf
     create: true
+    mode: '0644'
     marker: "# {mark} ANSIBLE MANAGED BLOCK (pi-gadget usb networking)"
     block: |
       interface {{ vars['pi-gadget'].dhcpcd.interface | default('usb0') }}
@@ -30,4 +37,4 @@
   ansible.builtin.service:
     name: dhcpcd
     state: restarted
-  when: dhcpcd_conf.changed
+  # when: dhcpcd_conf.changed
