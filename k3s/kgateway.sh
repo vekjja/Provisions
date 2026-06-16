@@ -1,13 +1,11 @@
 #!/bin/bash
                                                                                                   
-# `..   `..     `....         `.       `... `......`........`..        `..      `.       `..      `..
-# `..  `..    `.    `..      `. ..          `..    `..      `..        `..     `. ..      `..    `.. 
-# `.. `..    `..            `.  `..         `..    `..      `..   `.   `..    `.  `..      `.. `..   
-# `. `.      `..           `..   `..        `..    `......  `..  `..   `..   `..   `..       `..     
-# `..  `..   `..   `....  `...... `..       `..    `..      `.. `. `.. `..  `...... `..      `..     
-# `..   `..   `..    `.  `..       `..      `..    `..      `. `.    `.... `..       `..     `..     
-# `..     `..  `.....   `..         `..     `..    `........`..        `..`..         `..    `..     
-                                                                                                   
+# K)   kk    G)gggg   A)aa   T)tttttt E)eeeeee W)      ww   A)aa   Y)    yy 
+# K)  kk    G)       A)  aa     T)    E)       W)      ww  A)  aa   Y)  yy  
+# K)kkk    G)  ggg  A)    aa    T)    E)eeeee  W)  ww  ww A)    aa   Y)yy   
+# K)  kk   G)    gg A)aaaaaa    T)    E)       W)  ww  ww A)aaaaaa    Y)    
+# K)   kk   G)   gg A)    aa    T)    E)       W)  ww  ww A)    aa    Y)    
+# K)    kk   G)ggg  A)    aa    T)    E)eeeeee  W)ww www  A)    aa    Y)    
                                                                                          
 # Install KGateway (official chart)
 # https://kgateway.dev/docs/envoy/main/install/helm/
