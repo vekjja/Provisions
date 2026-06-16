@@ -15,7 +15,7 @@ helm upgrade --install cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
   --set installCRDs=true \
-  --set extraArgs={--enable-gateway-api}
+  --set config.enableGatewayAPI=true
 
 cat <<EOF | kubectl apply -f -
 ---
@@ -51,12 +51,13 @@ spec:
 ---
 EOF
 
+
 # cat <<EOF | kubectl apply -f -
 # ---
 # apiVersion: cert-manager.io/v1
 # kind: ClusterIssuer
 # metadata:
-#   name: cloudflare-letsencrypt-staging
+#   name: cloudflare-staging
 # spec:
 #   acme:
 #     email: seemywings@gmail.com
@@ -127,54 +128,3 @@ EOF
 # ---
 # EOF
 
-# Example Certificate resource for cert-manager
-# cat <<EOF | kubectl apply -f -
-# ---
-# apiVersion: cert-manager.io/v1
-# kind: Certificate
-# metadata:
-#   name: example-livingroom-cloud-certificate
-#   namespace: default
-# spec:
-#   secretName: example-livingroom-cloud-tls
-#   issuerRef:
-#     name: cloudflare-letsencrypt-production
-#     kind: ClusterIssuer
-#   privateKey:
-#     rotationPolicy: Always
-#     algorithm: RSA
-#     size: 2048
-#   dnsNames:
-#   - example.livingroom.cloud
-# ---
-# EOF
-
-#
-# Example Ingress Config
-#
-# cat <<EOF | kubectl apply -n test -f -
-# ---
-# apiVersion: extensions/v1
-# kind: Ingress
-# metadata:
-#   name: example-livingroom-cloud-ingress
-#   annotations:
-#     kubernetes.io/ingress.class: "nginx"
-#     cert-manager.io/cluster-issuer: "cloudflare-letsencrypt-staging"
-#     external-dns.alpha.kubernetes.io/hostname: example.livingroom.cloud
-#     external-dns.alpha.kubernetes.io/target: "174.44.105.210"
-# spec:
-#   tls:
-#   - hosts:
-#     - example.livingroom.cloud
-#     secretName: "example.livingroom.cloud-staging-tls"
-#   rules:
-#   - host: example.livingroom.cloud
-#     http:
-#       paths:
-#         - path: /
-#           backend:
-#             serviceName: nginx-test
-#             servicePort: 80
-# ---
-# EOF

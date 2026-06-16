@@ -31,10 +31,10 @@ extraArgs:
 - --default-targets=174.44.105.210
 
 sources:
-- service
-- ingress
 - crd
 - gateway-httproute
+- ingress
+- service
 
 crd:
   create: true
