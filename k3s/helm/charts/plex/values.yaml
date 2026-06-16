@@ -39,16 +39,19 @@ service:
 ingress:
   enabled: false
   className: "nginx"
-  annotations: { cert-manager.io/cluster-issuer: "letsencrypt-prod" }
+  annotations:
+    cert-manager.io/cluster-issuer: "cloudflare-letsencrypt-production"
+    external-dns.alpha.kubernetes.io/hostname: plex.livingroom.cloud
+    external-dns.alpha.kubernetes.io/target: "174.44.105.210"
   hosts:
-  - host: plex.example.com
+  - host: plex.livingroom.cloud
     paths:
     - path: /
       pathType: Prefix
   tls:
-  - secretName: plex-tls
+  - secretName: plex.livingroom.cloud-tls
     hosts:
-    - plex.example.com
+    - plex.livingroom.cloud
 
 # -- Expose the service via gateway-api HTTPRoute
 # Requires Gateway API resources and suitable controller installed within the cluster

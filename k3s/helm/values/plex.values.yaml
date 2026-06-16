@@ -36,23 +36,6 @@ service:
   targetPort: 32400
   protocol: TCP
 
-ingress:
-  enabled: false
-  className: "nginx"
-  annotations:
-    cert-manager.io/cluster-issuer: "cloudflare-letsencrypt-production"
-    external-dns.alpha.kubernetes.io/hostname: plex.livingroom.cloud
-    external-dns.alpha.kubernetes.io/target: "174.44.105.210"
-  hosts:
-  - host: plex.livingroom.cloud
-    paths:
-    - path: /
-      pathType: Prefix
-  tls:
-  - secretName: plex.livingroom.cloud-tls
-    hosts:
-    - plex.livingroom.cloud
-
 # -- Expose the service via gateway-api HTTPRoute
 # Requires Gateway API resources and suitable controller installed within the cluster
 # (see: https://gateway-api.sigs.k8s.io/guides/)
@@ -64,7 +47,6 @@ httpRoute:
     namespace: kgateway-system
   hostnames:
   - "plex.livingroom.cloud"
-  # List of rules and filters applied.
   rules:
   - matches:
     - path:
