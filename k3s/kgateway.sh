@@ -23,7 +23,7 @@ helm upgrade --install kgateway oci://cr.kgateway.dev/kgateway-dev/charts/kgatew
   -f ./k3s/helm/values/kgateway.values.yaml
 
 
-# Create Cert for kgateway
+# Create Certs for kgateway
 cat <<EOF | kubectl apply -f -
 ---
 apiVersion: cert-manager.io/v1
@@ -42,6 +42,24 @@ spec:
 ---
 EOF
 
+cat <<EOF | kubectl apply -f -
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-torch-cloud
+  namespace: kgateway-system # Must be in the same namespace as the Gateway
+spec:
+  secretName: wildcard-torch-cloud-tls # Matches the certificateRefs name in your Gateway
+  issuerRef:
+    name: cloudflare-letsencrypt-production
+    kind: ClusterIssuer
+  dnsNames:
+    - "*.torch.cloud"
+    - "torch.cloud"
+---
+EOF
+
 # Create a Gateway resource and configure an HTTP listener. 
 # The following Gateway can serve HTTPRoute resources from all namespaces.
 kubectl apply -f- <<EOF
@@ -55,12 +73,14 @@ kubectl apply -f- <<EOF
     spec:
       gatewayClassName: kgateway
       listeners:
+
       - name: http-all
         protocol: HTTP
         port: 80
         allowedRoutes:
           namespaces:
             from: All
+
       - name: livingroom-cloud-wildcard
         protocol: HTTPS
         port: 443
