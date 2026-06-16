@@ -1,5 +1,17 @@
 #!/bin/bash
 
+                                                                                                                                        
+#   ,ad8888ba,    88                                                                       88           88  88  88                        
+#  d8"'    `"8b   88                                                                       88           ""  88  ""    ,d                  
+# d8'        `8b  88                                                                       88               88        88                  
+# 88          88  88,dPPYba,   ,adPPYba,   ,adPPYba,  8b,dPPYba,  8b       d8  ,adPPYYba,  88,dPPYba,   88  88  88  MM88MMM  8b       d8  
+# 88          88  88P'    "8a  I8[    ""  a8P_____88  88P'   "Y8  `8b     d8'  ""     `Y8  88P'    "8a  88  88  88    88     `8b     d8'  
+# Y8,        ,8P  88       d8   `"Y8ba,   8PP"""""""  88           `8b   d8'   ,adPPPPP88  88       d8  88  88  88    88      `8b   d8'   
+#  Y8a.    .a8P   88b,   ,a8"  aa    ]8I  "8b,   ,aa  88            `8b,d8'    88,    ,88  88b,   ,a8"  88  88  88    88,      `8b,d8'    
+#   `"Y8888Y"'    8Y"Ybbd8"'   `"YbbdP"'   `"Ybbd8"'  88              "8"      `"8bbdP"Y8  8Y"Ybbd8"'   88  88  88    "Y888      Y88'     
+                                                                                                                               d8'      
+                                                                                                                              d8'       
+
 set -e
 
 # Helm repo setup
