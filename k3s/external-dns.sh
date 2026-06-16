@@ -1,5 +1,17 @@
 #!/bin/bash
 
+                                                                                                                                           
+# 88888888888                                                                        88            88888888ba,    888b      88   ad88888ba   
+# 88                          ,d                                                     88            88      `"8b   8888b     88  d8"     "8b  
+# 88                          88                                                     88            88        `8b  88 `8b    88  Y8,          
+# 88aaaaa      8b,     ,d8  MM88MMM  ,adPPYba,  8b,dPPYba,  8b,dPPYba,   ,adPPYYba,  88            88         88  88  `8b   88  `Y8aaaaa,    
+# 88"""""       `Y8, ,8P'     88    a8P_____88  88P'   "Y8  88P'   `"8a  ""     `Y8  88  aaaaaaaa  88         88  88   `8b  88    `"""""8b,  
+# 88              )888(       88    8PP"""""""  88          88       88  ,adPPPPP88  88  """"""""  88         8P  88    `8b 88          `8b  
+# 88            ,d8" "8b,     88,   "8b,   ,aa  88          88       88  88,    ,88  88            88      .a8P   88     `8888  Y8a     a8P  
+# 88888888888  8P'     `Y8    "Y888  `"Ybbd8"'  88          88       88  `"8bbdP"Y8  88            88888888Y"'    88      `888   "Y88888P"   
+                                                                                                                                           
+                                                                                                                                           
+
 # Install ExternalDNS (official chart) for Cloudflare
 # Requires environment variable CLOUDFLARE_API_TOKEN (DNS edit scope for the zone)
 

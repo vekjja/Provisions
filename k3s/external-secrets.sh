@@ -1,5 +1,16 @@
 #!/bin/bash
 
+                                                                                                                                                                                
+# 88888888888                                                                        88           ad88888ba                                                                       
+# 88                          ,d                                                     88          d8"     "8b                                                    ,d                
+# 88                          88                                                     88          Y8,                                                            88                
+# 88aaaaa      8b,     ,d8  MM88MMM  ,adPPYba,  8b,dPPYba,  8b,dPPYba,   ,adPPYYba,  88          `Y8aaaaa,     ,adPPYba,   ,adPPYba,  8b,dPPYba,   ,adPPYba,  MM88MMM  ,adPPYba,  
+# 88"""""       `Y8, ,8P'     88    a8P_____88  88P'   "Y8  88P'   `"8a  ""     `Y8  88  aaaaaaaa  `"""""8b,  a8P_____88  a8"     ""  88P'   "Y8  a8P_____88    88     I8[    ""  
+# 88              )888(       88    8PP"""""""  88          88       88  ,adPPPPP88  88  """"""""        `8b  8PP"""""""  8b          88          8PP"""""""    88      `"Y8ba,   
+# 88            ,d8" "8b,     88,   "8b,   ,aa  88          88       88  88,    ,88  88          Y8a     a8P  "8b,   ,aa  "8a,   ,aa  88          "8b,   ,aa    88,    aa    ]8I  
+# 88888888888  8P'     `Y8    "Y888  `"Ybbd8"'  88          88       88  `"8bbdP"Y8  88           "Y88888P"    `"Ybbd8"'   `"Ybbd8"'  88           `"Ybbd8"'    "Y888  `"YbbdP"'  
+                                                                                                                                                                                
+
 # Install External Secrets Operator (official chart)
 # https://external-secrets.io/latest/introduction/getting-started/
 
