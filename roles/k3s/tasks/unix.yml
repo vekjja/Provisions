@@ -3,23 +3,23 @@
   when: k3s_tuning.enabled | default(true)
 
 - name: Download K3S installer
-  get_url:
+  ansible.builtin.get_url:
     url: https://get.k3s.io
     dest: "/tmp/k3s.sh"
     mode: "0777"
 
 - name: Execute the K3S Installer
-  shell: "/tmp/k3s.sh {{ k3s.args | join(' ')}}"
+  ansible.builtin.shell: "/tmp/k3s.sh {{ k3s.args | join(' ') }}"
 
 - name: Remove the K3S Installer
-  file:
+  ansible.builtin.file:
     path: "/tmp/k3s.sh"
     state: absent
 
 - name: Get K3S Kubeconfig
   run_once: true
-  fetch:
+  ansible.builtin.fetch:
     src: "{{ k3s.kubeconfig.remote }}"
     dest: "{{ k3s.kubeconfig.local }}"
-    flat: yes
+    flat: true
   tags: get-kubeconfig

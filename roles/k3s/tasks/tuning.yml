@@ -101,5 +101,3 @@
   when: ansible_facts['service_mgr'] == 'systemd'
   notify:
     - Restart k3s-agent (if installed)
-
-
