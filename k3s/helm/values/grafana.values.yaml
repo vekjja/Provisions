@@ -21,22 +21,25 @@ grafana:
   initChownData:
     enabled: false
 
-  # Ingress
+  # --- DISABLED LEGACY INGRESS ---
   ingress:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: cloudflare-letsencrypt-production
-      external-dns.alpha.kubernetes.io/hostname: graf.livingroom.cloud
-      external-dns.alpha.kubernetes.io/target: "174.44.105.210"
-    hosts:
-    - graf.livingroom.cloud
-    path: /
-    pathType: Prefix
-    tls:
-    - secretName: graf.livingroom.cloud-tls
-      hosts:
+    enabled: false
+
+  # --- ENABLED NATIVE HTTPROUTE (GATEWAY API) ---
+  route:
+    main:
+      enabled: true
+      kind: HTTPRoute
+      apiVersion: gateway.networking.k8s.io/v1
+      parentRefs:
+      - name: http-gateway
+        namespace: kgateway-system
+      hostnames:
       - graf.livingroom.cloud
+      matches:
+      - path:
+          type: PathPrefix
+          value: /
 
   # Resources
   resources:
@@ -56,14 +59,12 @@ grafana:
   defaultDashboardsEnabled: false
 
   # Sidecar for auto-discovering dashboards from ConfigMaps
-  # Any ConfigMap with label "grafana_dashboard: 1" will be automatically loaded
   sidecar:
     dashboards:
       enabled: true
       label: grafana_dashboard
       labelValue: "1"
-      # Search in all namespaces or specific namespace
-      searchNamespace: ALL
+    searchNamespace: ALL
 
   # Datasources - configure Prometheus for metrics and Loki for logging
   datasources:
@@ -87,14 +88,9 @@ grafana:
 # Prometheus configuration
 prometheus:
   prometheusSpec:
-    # Scrape interval - how often to collect metrics (default is 30s)
     scrapeInterval: 6s
     scrapeTimeout: 5s
-
-    # Evaluation interval - how often to evaluate rules (default is 30s)
     evaluationInterval: 15s
-
-    # Storage configuration
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -103,8 +99,6 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
-
-    # Resource limits
     resources:
       limits:
         cpu: 2000m
@@ -112,13 +106,9 @@ prometheus:
       requests:
         cpu: 500m
         memory: 2Gi
-
-    # Service configuration
-    service:
-      type: ClusterIP
-      port: 9090
-
-  # Prometheus ingress (disabled - access via port-forward if needed)
+  service:
+    type: ClusterIP
+    port: 9090
   ingress:
     enabled: false
 
@@ -129,14 +119,6 @@ alertmanager:
 # Node Exporter (collects node metrics)
 nodeExporter:
   enabled: true
-
-# prometheus-node-exporter:
-#   extraArgs:
-#   # Keep kube-prometheus-stack's default filesystem exclusions to avoid noisy/duplicated mount metrics
-#   - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run/containerd/.+|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
-#   - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs|erofs)$
-#   - --collector.systemd
-#   - --collector.processes
 
 # Kube State Metrics (collects Kubernetes resource metrics)
 kubeStateMetrics:
