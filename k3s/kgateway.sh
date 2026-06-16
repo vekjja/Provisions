@@ -63,28 +63,28 @@ EOF
 # Create a Gateway resource and configure an HTTP listener. 
 # The following Gateway can serve HTTPRoute resources from all namespaces.
 kubectl apply -f- <<EOF
-    kind: Gateway
-    apiVersion: gateway.networking.k8s.io/v1
-    metadata:
-      name: http-gateway
-      namespace: kgateway-system
-      annotations:
-        external-dns.alpha.kubernetes.io/target: "174.44.105.210"
-    spec:
-      gatewayClassName: kgateway
-      listeners:
-
+  kind: Gateway
+  apiVersion: gateway.networking.k8s.io/v1
+  metadata:
+    name: http-gateway
+    namespace: kgateway-system
+    annotations:
+      external-dns.alpha.kubernetes.io/target: "174.44.105.210"
+  spec:
+    gatewayClassName: kgateway
+    listeners:
+      # 1. Clear HTTP Listener
       - name: http-all
         protocol: HTTP
         port: 80
         allowedRoutes:
           namespaces:
             from: All
-
-      - name: livingroom-cloud-wildcard
+  
+      # 2. Consolidated HTTPS Listener for ALL livingroom.cloud domains
+      - name: livingroom-cloud-https
         protocol: HTTPS
         port: 443
-        hostname: "*.livingroom.cloud"
         allowedRoutes:
           namespaces:
             from: All
@@ -92,23 +92,12 @@ kubectl apply -f- <<EOF
           mode: Terminate
           certificateRefs:
             - name: wildcard-livingroom-cloud-tls
-
-      - name: livingroom-cloud
+  
+      # 3. Dedicated HTTPS Listener for torch.cloud
+      - name: torch-cloud-https
         protocol: HTTPS
         port: 443
-        hostname: "livingroom.cloud" # Exact root domain
-        allowedRoutes:
-          namespaces:
-            from: All
-        tls:
-          mode: Terminate
-          certificateRefs:
-            - name: wildcard-livingroom-cloud-tls
-
-      - name: torch-cloud
-        protocol: HTTPS
-        port: 443
-        hostname: "torch.cloud" # Exact root domain
+        hostname: "torch.cloud"
         allowedRoutes:
           namespaces:
             from: All
