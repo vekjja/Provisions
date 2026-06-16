@@ -55,24 +55,13 @@ kubectl apply -f- <<EOF
     spec:
       gatewayClassName: kgateway
       listeners:
-      - protocol: HTTP
-        port: 8080
-        name: http
+      - name: http-all
+        protocol: HTTP
+        port: 80
         allowedRoutes:
           namespaces:
             from: All
-      - name: https-alt
-        protocol: HTTPS
-        port: 8443
-        hostname: "*.livingroom.cloud"
-        allowedRoutes:
-          namespaces:
-            from: All
-        tls:
-          mode: Terminate
-          certificateRefs:
-            - name: wildcard-livingroom-cloud-tls
-      - name: https
+      - name: livingroom-cloud-wildcard
         protocol: HTTPS
         port: 443
         hostname: "*.livingroom.cloud"
@@ -83,6 +72,30 @@ kubectl apply -f- <<EOF
           mode: Terminate
           certificateRefs:
             - name: wildcard-livingroom-cloud-tls
+
+      - name: livingroom-cloud
+        protocol: HTTPS
+        port: 443
+        hostname: "livingroom.cloud" # Exact root domain
+        allowedRoutes:
+          namespaces:
+            from: All
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: wildcard-livingroom-cloud-tls
+
+      - name: torch-cloud
+        protocol: HTTPS
+        port: 443
+        hostname: "torch.cloud" # Exact root domain
+        allowedRoutes:
+          namespaces:
+            from: All
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: wildcard-torch-cloud-tls
 EOF
 
 
