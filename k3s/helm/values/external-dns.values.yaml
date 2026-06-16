@@ -34,6 +34,7 @@ sources:
 - service
 - ingress
 - crd
+- gateway-httproute
 
 crd:
   create: true

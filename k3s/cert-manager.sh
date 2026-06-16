@@ -14,7 +14,8 @@ helm repo update
 helm upgrade --install cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
-  --set installCRDs=true
+  --set installCRDs=true \
+  --set extraArgs={--enable-gateway-api}
 
 cat <<EOF | kubectl apply -f -
 ---
