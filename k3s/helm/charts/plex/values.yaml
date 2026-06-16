@@ -50,6 +50,24 @@ ingress:
     hosts:
     - plex.example.com
 
+# -- Expose the service via gateway-api HTTPRoute
+# Requires Gateway API resources and suitable controller installed within the cluster
+# (see: https://gateway-api.sigs.k8s.io/guides/)
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs:
+  - name: http-gateway
+    namespace: kgateway-system
+  hostnames:
+  - "plex.livingroom.cloud"
+  # List of rules and filters applied.
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+
 persistence:
   movies:
     storageClass: "local-storage"

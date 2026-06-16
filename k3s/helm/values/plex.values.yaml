@@ -37,7 +37,7 @@ service:
   protocol: TCP
 
 ingress:
-  enabled: true
+  enabled: false
   className: "nginx"
   annotations:
     cert-manager.io/cluster-issuer: "cloudflare-letsencrypt-production"
@@ -52,6 +52,24 @@ ingress:
   - secretName: plex.livingroom.cloud-tls
     hosts:
     - plex.livingroom.cloud
+
+# -- Expose the service via gateway-api HTTPRoute
+# Requires Gateway API resources and suitable controller installed within the cluster
+# (see: https://gateway-api.sigs.k8s.io/guides/)
+httpRoute:
+  enabled: true
+  annotations: {}
+  parentRefs:
+  - name: http-gateway
+    namespace: kgateway-system
+  hostnames:
+  - "plex.livingroom.cloud"
+  # List of rules and filters applied.
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
 
 persistence:
   movies:
