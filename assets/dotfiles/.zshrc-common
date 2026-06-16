@@ -219,25 +219,13 @@ alias alpine-docker="docker run -it --rm --name alpine-box ghcr.io/vekjja/alpine
 # Run an ephemeral alpine toolbox pod. Supports either:
 # - alpine-k8s sh -c 'echo hi'
 # - alpine-k8s 'echo hi'          (runs via sh -lc inside the pod)
+# Run an ephemeral alpine toolbox pod.
 function alpine-k8s() {
-  if [[ $# -eq 0 ]]; then
-    kubectl run alpine-box \
-      --image=ghcr.io/vekjja/alpine-box:main \
-      --restart=Never \
-      --image-pull-policy=Always \
-      -it --rm \
-      --command -- zsh
-    return $?
-  fi
+  local cmd=("$@")
 
-  if [[ $# -eq 1 ]]; then
-    kubectl run alpine-box \
-      --image=ghcr.io/vekjja/alpine-box:main \
-      --restart=Never \
-      --image-pull-policy=Always \
-      -it --rm \
-      --command -- sh -c "$1"
-    return $?
+  # Default to zsh if no arguments are passed
+  if [[ ${#cmd[@]} -eq 0 ]]; then
+    cmd=("zsh")
   fi
 
   kubectl run alpine-box \
@@ -245,8 +233,42 @@ function alpine-k8s() {
     --restart=Never \
     --image-pull-policy=Always \
     -it --rm \
-    --command -- "$@"
+    --command -- "${cmd[@]}"
 }
+
+# Deploys the alpine-box helm chart directly from the remote git repository.
+# Usage: alpine-helm [--set key=value] [--namespace my-ns]
+function alpine-helm() {
+  local release_name="alpine-box"
+  local namespace=${release_name} # default namespace matches release name
+  local remote_repo="https://github.com/vekjja/alpine-box"
+  
+  # Create temporary workspace
+  local TEMP_DIR
+  TEMP_DIR=$(mktemp -d -t alpine-box-helm.XXXXXX)
+  
+  # Ensure cleanup happens when the function returns or gets interrupted
+  trap '[[ -d "$TEMP_DIR" ]] && rm -rf "$TEMP_DIR"' RETURN INT TERM
+
+  echo "📥 Cloning chart repository into a temporary workspace..."
+  if ! git clone --depth 1 --branch main "$remote_repo" "$TEMP_DIR" &>/dev/null; then
+    echo "❌ Error: Failed to clone repository from $remote_repo"
+    return 1
+  fi
+
+  echo "🚀 Deploying Helm release: ${release_name}..."
+
+  # Execute helm upgrade passing through any extra flags/overrides
+  helm upgrade --install "$release_name" "$TEMP_DIR/helm" \
+    "$@" \
+    --namespace "$namespace" \
+    --create-namespace
+
+    # example http route overrides:
+    # alpine-helm --set httpRoute.enabled=true
+    # alpine-helm --set httpRoute.enabled=true --set 'httpRoute.hostnames[0]=alpine.livingroom.cloud'
+}
+
 
 #### Docker ###
 export DOCKER_BUILDKIT=1
