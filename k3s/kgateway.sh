@@ -1,11 +1,14 @@
 #!/bin/bash
                                                                                                   
-# K)   kk    G)gggg   A)aa   T)tttttt E)eeeeee W)      ww   A)aa   Y)    yy 
-# K)  kk    G)       A)  aa     T)    E)       W)      ww  A)  aa   Y)  yy  
-# K)kkk    G)  ggg  A)    aa    T)    E)eeeee  W)  ww  ww A)    aa   Y)yy   
-# K)  kk   G)    gg A)aaaaaa    T)    E)       W)  ww  ww A)aaaaaa    Y)    
-# K)   kk   G)   gg A)    aa    T)    E)       W)  ww  ww A)    aa    Y)    
-# K)    kk   G)ggg  A)    aa    T)    E)eeeeee  W)ww www  A)    aa    Y)    
+# 88      a8P   ,ad8888ba,         db    888888888888  88888888888  I8,        8        ,8I    db    8b        d8  
+# 88    ,88'   d8"'    `"8b       d88b        88       88           `8b       d8b       d8'   d88b    Y8,    ,8P   
+# 88  ,88"    d8'                d8'`8b       88       88            "8,     ,8"8,     ,8"   d8'`8b    Y8,  ,8P    
+# 88,d88'     88                d8'  `8b      88       88aaaaa        Y8     8P Y8     8P   d8'  `8b    "8aa8"     
+# 8888"88,    88      88888    d8YaaaaY8b     88       88"""""        `8b   d8' `8b   d8'  d8YaaaaY8b    `88'      
+# 88P   Y8b   Y8,        88   d8""""""""8b    88       88              `8a a8'   `8a a8'  d8""""""""8b    88       
+# 88     "88,  Y8a.    .a88  d8'        `8b   88       88               `8a8'     `8a8'  d8'        `8b   88       
+# 88       Y8b  `"Y88888P"  d8'          `8b  88       88888888888       `8'       `8'  d8'          `8b  88       
+                                                                                                                 
                                                                                          
 # Install KGateway (official chart)
 # https://kgateway.dev/docs/envoy/main/install/helm/
