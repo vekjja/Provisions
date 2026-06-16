@@ -6,7 +6,7 @@
  sudo dd bs=1m if=/path/to/image.img of=/dev/YOUR_DISK_DRIVE
 ```
 
-* Eject and remount how device
+* Eject and remount device
 ```sh
   vim /Volumes/bootfs/config.txt   # add dtoverlay=dwc2
   vim /Volumes/bootfs/cmdline.txt  # after `rootwait` add `modules-load=dwc2,g_ether`
