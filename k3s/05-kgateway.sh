@@ -54,24 +54,10 @@ spec:
         namespaces:
           from: All
 
-    # 2. Dedicated Root domain listener for livingroom.cloud
-    - name: livingroom-cloud-root
-      protocol: HTTPS
-      port: 443
-      hostname: "livingroom.cloud"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: auto-livingroom-cloud-tls
-
-    # 3. Wildcard subdomain listener for livingroom.cloud
+    # Wildcard listener for livingroom.cloud
     - name: livingroom-cloud-wildcard
       protocol: HTTPS
       port: 443
-      hostname: "*.livingroom.cloud"
       allowedRoutes:
         namespaces:
           from: All
@@ -80,7 +66,7 @@ spec:
         certificateRefs:
           - name: auto-livingroom-cloud-tls
 
-    # 4. Dedicated HTTPS Listener for torch.cloud
+    # Dedicated HTTPS Listener for torch.cloud
     - name: torch-cloud-https
       protocol: HTTPS
       port: 443
