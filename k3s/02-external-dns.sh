@@ -30,7 +30,7 @@ kubectl create secret generic cloudflare-api-token \
   --dry-run=client -o yaml | kubectl apply -f -
 
 # Install/upgrade ExternalDNS (official chart)
-helm upgrade --install external-dns external-dns/external-dns \
+helm upgrade --install ext-dns external-dns/external-dns \
   --namespace external-dns \
   --values ./k3s/helm/values/external-dns.values.yaml
 

@@ -58,12 +58,22 @@ grafana:
   # Dashboard configuration
   defaultDashboardsEnabled: false
 
+  # Public URL for share links (gateway terminates TLS on 443).
+  # Use env vars only — grafana.ini in values has caused helm template errors.
+  env:
+    GF_SERVER_ROOT_URL: "https://graf.livingroom.cloud/"
+    GF_SERVER_DOMAIN: "graf.livingroom.cloud"
+    GF_SERVER_PROTOCOL: "http"
+
   # Sidecar for auto-discovering dashboards from ConfigMaps
   sidecar:
     dashboards:
       enabled: true
       label: grafana_dashboard
       labelValue: "1"
+    datasources:
+      enabled: false
+      defaultDatasourceEnabled: false
     searchNamespace: ALL
 
   # Datasources - configure Prometheus for metrics and Loki for logging
