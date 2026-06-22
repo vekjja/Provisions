@@ -59,10 +59,10 @@ Remote mode runs `playbooks/provision.yml` against the `remote` inventory group:
 - **Playbooks usage**: **[`playbooks/README.md`](../playbooks/README.md)**
 - **Vars reference**: **[`playbooks/VARS.md`](../playbooks/VARS.md)**
 
-## 🪟 Windows (bootstrap)
+<!-- ## 🪟 Windows (bootstrap)
 
 This sets up WSL + WinRM prerequisites; after it completes, open WSL (Debian) and run the Linux one-liner above.
 
 ```powershell
 iex ((Invoke-WebRequest -Uri "https://raw.githubusercontent.com/vekjja/provisions/main/scripts/setup.ps1" -UseBasicParsing).Content)
-```
+``` -->
