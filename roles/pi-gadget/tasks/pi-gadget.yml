@@ -26,10 +26,10 @@
     mode: '0644'
     marker: "# {mark} ANSIBLE MANAGED BLOCK (pi-gadget usb networking)"
     block: |
-      interface {{ vars['pi-gadget'].dhcpcd.interface | default('usb0') }}
-      static ip_address={{ vars['pi-gadget'].dhcpcd.address | default('100.0.0.10/24') }}
-      static routers={{ vars['pi-gadget'].dhcpcd.routes | default('100.0.0.1') }}
-      static domain_name_servers={{ (vars['pi-gadget'].dhcpcd.nameservers | default(['8.8.8.8', '1.1.1.1'])) | join(' ') }}
+      interface {{ pi_gadget.dhcpcd.interface | default('usb0') }}
+      static ip_address={{ pi_gadget.dhcpcd.address | default('100.0.0.10/24') }}
+      static routers={{ pi_gadget.dhcpcd.routes | default('100.0.0.1') }}
+      static domain_name_servers={{ (pi_gadget.dhcpcd.nameservers | default(['8.8.8.8', '1.1.1.1'])) | join(' ') }}
   register: dhcpcd_conf
 
 - name: Restart dhcpcd
