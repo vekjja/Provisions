@@ -19,12 +19,11 @@ firewall_rules:
 k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
   kubeconfig:
     remote: ~/.kube/k3sconfig
-    local: "{{ lookup('env', 'HOME') }}/.kube/mini-cloud"
+    local: "{{ lookup('env', 'HOME') }}/.kube/dev-node-0"
   args:
     - --disable=traefik
     - --tls-san 100.56.134.72
     - --tls-san dev-node-0.livingroom.cloud
-    - --bind-address=100.56.134.72
     - --disable=servicelb
     - --prefer-bundled-bin
     - --write-kubeconfig-mode 644
