@@ -23,3 +23,18 @@
     dest: "{{ k3s.kubeconfig.local }}"
     flat: true
   tags: get-kubeconfig
+
+- name: Configure local kubeconfig
+  ansible.builtin.include_tasks:
+    file: kubeconfig.yml
+    apply:
+      delegate_to: localhost
+      become: false
+      run_once: true
+      tags:
+        - get-kubeconfig
+        - k3s
+  when: k3s.kubeconfig.context is defined or k3s.kubeconfig.server is defined
+  tags:
+    - get-kubeconfig
+    - k3s

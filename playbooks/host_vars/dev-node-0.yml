@@ -18,6 +18,8 @@ firewall_rules:
 
 k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
   kubeconfig:
+    context: dev-node-0
+    server: 100.56.134.72
     remote: ~/.kube/k3sconfig
     local: "{{ lookup('env', 'HOME') }}/.kube/dev-node-0"
   args:
