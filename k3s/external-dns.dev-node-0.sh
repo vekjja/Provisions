@@ -21,7 +21,7 @@ helm repo add external-dns https://kubernetes-sigs.github.io/external-dns/
 helm repo update
 
 # Namespace and secret
-kubectl create namespace external-dns --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace external-dns
 
 # Create secret for Cloudflare API token
 kubectl create secret generic cloudflare-api-token \
@@ -33,3 +33,21 @@ kubectl create secret generic cloudflare-api-token \
 helm upgrade --install ext-dns external-dns/external-dns \
   --namespace external-dns \
   --values ./k3s/helm/values/external-dns.dev-node-0.values.yaml
+
+
+# Example DNSEndpoint
+cat <<EOF | kubectl apply -f -
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: example-authriz-io-dns
+  namespace: external-dns
+spec:
+  endpoints:
+  - dnsName: example.authriz.io
+    recordType: A
+    recordTTL: 300
+    targets: [ "52.200.204.147" ]
+---
+EOF

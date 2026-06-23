@@ -20,7 +20,6 @@
 #   - Access key + credentials secret: dev-external-secrets/credentials
 # Deploy CDK before running this script.
 
-set -euo pipefail
 
 helm repo add external-secrets https://charts.external-secrets.io
 helm repo update

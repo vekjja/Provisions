@@ -8,6 +8,10 @@
 # ░╚════╝░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░░░░░░░╚═╝░░░░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝░╚═════╝░╚══════╝╚═╝░░╚═╝
 
 # Install Cert Manager using Helm
+# Requires environment variable CLOUDFLARE_ACCOUNT_API_TOKEN (DNS edit scope for the zone)
+
+set -euo pipefail
+
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 
@@ -17,18 +21,10 @@ helm upgrade --install cert-manager jetstack/cert-manager \
   --set installCRDs=true \
   --set config.enableGatewayAPI=true
 
-cat <<EOF | kubectl apply -f -
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: cert-manager
-  name: cloudflare-api-token
-type: Opaque
-stringData:
-  api-token: ${CLOUDFLARE_ACCOUNT_API_TOKEN}
----
-EOF
+kubectl create secret generic cloudflare-api-token \
+  --from-literal=api-token="${CLOUDFLARE_ACCOUNT_API_TOKEN:?CLOUDFLARE_ACCOUNT_API_TOKEN required}" \
+  -n cert-manager \
+  --dry-run=client -o yaml | kubectl apply -f -
 
 cat <<EOF | kubectl apply -f -
 ---

@@ -51,19 +51,3 @@ helm upgrade --install ext-dns external-dns/external-dns \
 #     targets: [ "174.44.105.210" ]
 # ---
 # EOF
-
-# cat <<EOF | kubectl apply -f -
-# ---
-# apiVersion: externaldns.k8s.io/v1alpha1
-# kind: DNSEndpoint
-# metadata:
-#   name: example-authriz-io-dns
-#   namespace: external-dns
-# spec:
-#   endpoints:
-#   - dnsName: example.authriz.io
-#     recordType: A
-#     recordTTL: 300
-#     targets: [ "34.237.174.110" ]
-# ---
-# EOF
