@@ -1,0 +1,44 @@
+hostname: dev-node-0
+
+packages:
+  - kubectx
+
+files:
+  user:
+    - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
+    - { src: 'dotfiles/.zshrc-linux', dest: '~/.zshrc' }
+    - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
+    - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
+
+
+firewall_rules:
+  - { port: '22', proto: 'tcp', comment: 'SSH' }
+  - { port: '6443', proto: 'tcp', comment: 'Kubernetes API' }
+  - { port: '51820', proto: 'udp', comment: 'WireGuard VPN' }
+
+k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
+  kubeconfig:
+    remote: ~/.kube/k3sconfig
+    local: "{{ lookup('env', 'HOME') }}/.kube/mini-cloud"
+  args:
+    - --disable=traefik
+    - --tls-san 100.51.45.166
+    - --tls-san lhava.livingroom.cloud
+    - --bind-address=100.51.45.166
+    - --disable=servicelb
+    - --prefer-bundled-bin
+    - --write-kubeconfig-mode 644
+    - --write-kubeconfig ~/.kube/k3sconfig
+
+# wireguard:
+#   server_endpoint: lhava.livingroom.cloud
+#   interfaces:
+#     - name: wg0
+#       address: 10.0.10.0/24
+#       peers:
+#         - name: workMac
+#           allowed_ips: 10.0.10.2/32
+#         - name: macAir
+#           allowed_ips: 10.0.10.3/32
+#         - name: notYouriPhone
+#           allowed_ips: 10.0.10.4/32

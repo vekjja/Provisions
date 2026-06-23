@@ -7,9 +7,10 @@
 
   roles:
 
-    - { role: files, tags: ['files', 'config'] }
-    - { role: shell, tags: ['shell', 'config'] }
     - { role: packages, tags: ['packages', 'config'] }
+    - { role: hostname, tags: ['hostname', 'config'] }
+    - { role: shell, tags: ['shell', 'config'] }
+    - { role: files, tags: ['files', 'config'] }
 
     - { role: fstab, tags: ['fstab', 'filesystem'] }
     - { role: smb, tags: ['smb', 'filesystem'] }

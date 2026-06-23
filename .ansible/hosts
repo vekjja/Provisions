@@ -4,6 +4,7 @@
 macbook ansible_connection=local
 
 [remote]
+dev-node-0
 mini-cloud
 
 #[windows]

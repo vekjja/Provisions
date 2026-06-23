@@ -1,0 +1,3 @@
+- name: Debian Tasks
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_facts['os_family'] == 'Debian' and hostname is defined

@@ -1,7 +1,0 @@
-name: lhava
-description: Lhava take home IaC
-runtime: go
-config:
-  pulumi:tags:
-    value:
-      pulumi:template: aws-go

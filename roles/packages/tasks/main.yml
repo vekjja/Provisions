@@ -5,6 +5,7 @@
 - name: Install Unix Packages
   ansible.builtin.package:
     name: "{{ unix_packages }}"
+    update_cache: true
     state: present
   become: "{{ use_sudo }}"
   become_flags: "-n"
@@ -13,6 +14,7 @@
 - name: Install OS-Specific Packages (Mac/Linux)
   ansible.builtin.package:
     name: "{{ packages | default([]) }}"
+    update_cache: true
     state: present
   become: "{{ use_sudo }}"
   when: packages is defined

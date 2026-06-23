@@ -84,7 +84,22 @@ alias idfsf="idf.py size-files"
 
 #### Pulumi ####
 alias p="pulumi"
-alias pup="pulumi up"
+alias pup="pulumi  up"
+alias psl="pulumi stack list"
+alias psd="pulumi stack describe"
+
+#### AWS ####
+
+#### Terraform ####
+alias terraform="tofu"
+alias tf="terraform"
+alias tfi="terraform init"
+alias tfp="terraform plan"
+alias tfa="terraform apply"
+alias tfd="terraform destroy"
+alias tfs="terraform show"
+alias tfg="terraform graph"
+alias tfo="terraform output"
 
 #### Oh My Zsh ####
 export ZSH="$HOME/.oh-my-zsh"
