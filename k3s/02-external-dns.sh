@@ -25,14 +25,15 @@ kubectl create namespace external-dns --dry-run=client -o yaml | kubectl apply -
 
 # Create secret for Cloudflare API token
 kubectl create secret generic cloudflare-api-token \
-  --from-literal=api-token="${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN required}" \
+  --from-literal=api-token="${CLOUDFLARE_ACCOUNT_API_TOKEN:?CLOUDFLARE_ACCOUNT_API_TOKEN required}" \
   -n external-dns \
   --dry-run=client -o yaml | kubectl apply -f -
 
 # Install/upgrade ExternalDNS (official chart)
 helm upgrade --install ext-dns external-dns/external-dns \
   --namespace external-dns \
-  --values ./k3s/helm/values/external-dns.values.yaml
+  --values ./k3s/helm/values/external-dns.dev-node-0.values.yaml
+  # --values ./k3s/helm/values/external-dns.values.yaml 
 
 
 # Example DNSEndpoint
@@ -49,5 +50,21 @@ helm upgrade --install ext-dns external-dns/external-dns \
 #     recordType: A
 #     recordTTL: 300
 #     targets: [ "174.44.105.210" ]
+# ---
+# EOF
+
+# cat <<EOF | kubectl apply -f -
+# ---
+# apiVersion: externaldns.k8s.io/v1alpha1
+# kind: DNSEndpoint
+# metadata:
+#   name: example-authriz-io-dns
+#   namespace: external-dns
+# spec:
+#   endpoints:
+#   - dnsName: example.authriz.io
+#     recordType: A
+#     recordTTL: 300
+#     targets: [ "34.237.174.110" ]
 # ---
 # EOF

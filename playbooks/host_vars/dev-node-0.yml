@@ -35,6 +35,11 @@ k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
     - --write-kubeconfig-mode 644
     - --write-kubeconfig ~/.kube/k3sconfig
 
+# Allow kgateway hostNetwork proxies to bind ports 80/443 as non-root.
+k3s_tuning_extra_sysctls:
+  net.ipv4.ip_unprivileged_port_start: "0"
+  net.ipv6.ip_unprivileged_port_start: "0"
+
 # wireguard:
 #   server_endpoint: lhava.livingroom.cloud
 #   interfaces:

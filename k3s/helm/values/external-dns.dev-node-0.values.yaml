@@ -1,0 +1,53 @@
+provider:
+  name: cloudflare
+
+env:
+- name: CF_API_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: cloudflare-api-token
+      key: api-token
+
+domainFilters:
+- authriz.io
+
+managedRecordTypes:
+- A
+- AAAA
+- CNAME
+- MX
+- TXT
+
+# Allow external-dns to delete records in the provider when they disappear from Kubernetes
+# (e.g. when a DNSEndpoint is deleted). Safe when paired with registry=txt + txtOwnerId.
+policy: sync
+registry: txt
+txtOwnerId: dev-node-0
+txtPrefix: externaldns
+
+extraArgs:
+- --default-targets=34.237.174.110
+- --force-default-targets
+# With hostNetwork + ClusterIP gateways, the gateway-httproute source publishes the
+# Service ClusterIP unless a target annotation exists; force default when needed.
+
+sources:
+- crd
+- gateway-httproute
+- ingress
+- service
+
+crd:
+  create: true
+
+logLevel: info
+interval: 1m
+
+serviceAccount:
+  create: true
+
+rbac:
+  create: true
+
+metrics:
+  enabled: false

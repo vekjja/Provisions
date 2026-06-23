@@ -34,6 +34,30 @@
     sysctl_set: true
     reload: true
 
+- name: Collect optional extra host sysctls
+  ansible.builtin.set_fact:
+    k3s_extra_sysctls: "{{ k3s_tuning.extra_sysctls | default({}) | combine(k3s_tuning_extra_sysctls | default({})) }}"
+
+- name: Check optional extra host sysctl paths
+  ansible.builtin.stat:
+    path: "/proc/sys/{{ item.key | replace('.', '/') }}"
+  loop: "{{ k3s_extra_sysctls | dict2items }}"
+  register: k3s_extra_sysctl_paths
+  when: k3s_extra_sysctls | length > 0
+
+- name: Apply optional extra host sysctls
+  become: true
+  ansible.builtin.sysctl:
+    name: "{{ item.item.key }}"
+    value: "{{ item.item.value }}"
+    state: present
+    sysctl_set: true
+    reload: true
+  loop: "{{ k3s_extra_sysctl_paths.results | default([]) | selectattr('stat.exists', 'defined') | selectattr('stat.exists') | list }}"
+  when:
+    - k3s_extra_sysctls | length > 0
+    - k3s_extra_sysctl_paths.results is defined
+
 - name: Ensure systemd drop-in directory exists for k3s (server)
   become: true
   ansible.builtin.file:

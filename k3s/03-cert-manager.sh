@@ -26,7 +26,7 @@ metadata:
   name: cloudflare-api-token
 type: Opaque
 stringData:
-  api-token: ${CLOUDFLARE_API_TOKEN}
+  api-token: ${CLOUDFLARE_ACCOUNT_API_TOKEN}
 ---
 EOF
 
@@ -51,27 +51,6 @@ spec:
 ---
 EOF
 
-
-# cat <<EOF | kubectl apply -f -
-# ---
-# apiVersion: cert-manager.io/v1
-# kind: ClusterIssuer
-# metadata:
-#   name: cloudflare-staging
-# spec:
-#   acme:
-#     email: seemywings@gmail.com
-#     server: https://acme-staging-v02.api.letsencrypt.org/directory
-#     privateKeySecretRef:
-#       name: cloudflare-issuer-account-key
-#     solvers:
-#     - dns01:
-#         cloudflare:
-#           apiTokenSecretRef:
-#             name: cloudflare-api-token
-#             key: api-token
-# ---
-# EOF
 
 # Certificate Issuer LetsEncrypt Staging
 #

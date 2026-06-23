@@ -22,3 +22,6 @@ k3s_tuning:
   # Reduces long shutdown times caused by containerd waiting for containers to stop.
   # Default systemd timeout is 90s; setting to 30s speeds up shutdown while still allowing graceful termination.
   shutdown_timeout_sec: 18
+
+  # Optional extra host sysctls, e.g. for kgateway hostNetwork on ports 80/443.
+  extra_sysctls: {}
