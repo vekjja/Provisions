@@ -1,0 +1,4 @@
+# Managed by Ansible (roles/k3s/tasks/tuning.yml)
+{% for entry in k3s_extra_sysctl_entries %}
+{{ entry.key }}={{ entry.value }}
+{% endfor %}

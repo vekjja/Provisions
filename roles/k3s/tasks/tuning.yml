@@ -36,7 +36,7 @@
 
 - name: Collect optional extra host sysctls
   ansible.builtin.set_fact:
-    k3s_extra_sysctls: "{{ k3s_tuning.extra_sysctls | default({}) | combine(k3s_tuning_extra_sysctls | default({})) }}"
+    k3s_extra_sysctls: "{{ k3s_tuning.extra_sysctls | default({}) | combine(k3s.tuning.extra_sysctls | default({})) }}"
 
 - name: Check optional extra host sysctl paths
   ansible.builtin.stat:
@@ -45,18 +45,32 @@
   register: k3s_extra_sysctl_paths
   when: k3s_extra_sysctls | length > 0
 
-- name: Apply optional extra host sysctls
-  become: true
-  ansible.builtin.sysctl:
-    name: "{{ item.item.key }}"
-    value: "{{ item.item.value }}"
-    state: present
-    sysctl_set: true
-    reload: true
-  loop: "{{ k3s_extra_sysctl_paths.results | default([]) | selectattr('stat.exists', 'defined') | selectattr('stat.exists') | list }}"
+- name: Set list of extra sysctls that exist on this host
+  ansible.builtin.set_fact:
+    k3s_extra_sysctls_present: "{{ k3s_extra_sysctl_paths.results | default([]) | selectattr('stat.exists', 'defined') | selectattr('stat.exists') | list }}"
   when:
     - k3s_extra_sysctls | length > 0
     - k3s_extra_sysctl_paths.results is defined
+
+- name: Build extra sysctl entries for sysctl.d
+  ansible.builtin.set_fact:
+    k3s_extra_sysctl_entries: "{{ k3s_extra_sysctls_present | map(attribute='item') | list }}"
+  when: k3s_extra_sysctls_present | default([]) | length > 0
+
+- name: Write optional extra host sysctls to sysctl.d
+  become: true
+  ansible.builtin.template:
+    src: 99-k3s-extra.conf.j2
+    dest: /etc/sysctl.d/99-k3s-extra.conf
+    mode: "0644"
+  when: k3s_extra_sysctls_present | default([]) | length > 0
+
+- name: Apply optional extra host sysctls
+  become: true
+  ansible.builtin.command:
+    cmd: sysctl -p /etc/sysctl.d/99-k3s-extra.conf
+  changed_when: true
+  when: k3s_extra_sysctls_present | default([]) | length > 0
 
 - name: Ensure systemd drop-in directory exists for k3s (server)
   become: true
@@ -73,6 +87,20 @@
     state: directory
     mode: "0755"
   when: ansible_facts['service_mgr'] == 'systemd'
+
+- name: Apply extra sysctls before k3s starts
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/k3s.service.d/10-extra-sysctls.conf
+    mode: "0644"
+    content: |-
+      [Service]
+      ExecStartPre=-/usr/sbin/sysctl -p /etc/sysctl.d/99-k3s-extra.conf
+  when:
+    - ansible_facts['service_mgr'] == 'systemd'
+    - k3s_extra_sysctls_present | default([]) | length > 0
+  notify:
+    - Restart k3s (if installed)
 
 - name: Raise NOFILE limit for k3s service
   become: true
@@ -99,6 +127,20 @@
   when: ansible_facts['service_mgr'] == 'systemd'
   notify:
     - Restart k3s (if installed)
+
+- name: Apply extra sysctls before k3s-agent starts
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/k3s-agent.service.d/10-extra-sysctls.conf
+    mode: "0644"
+    content: |-
+      [Service]
+      ExecStartPre=-/usr/sbin/sysctl -p /etc/sysctl.d/99-k3s-extra.conf
+  when:
+    - ansible_facts['service_mgr'] == 'systemd'
+    - k3s_extra_sysctls_present | default([]) | length > 0
+  notify:
+    - Restart k3s-agent (if installed)
 
 - name: Raise NOFILE limit for k3s-agent service
   become: true

@@ -34,7 +34,7 @@ helm upgrade --install kgateway oci://cr.kgateway.dev/kgateway-dev/charts/kgatew
 
 # Bind the Envoy proxy to the node network so ports 80/443 are reachable on the EC2 EIP.
 # hostNetwork forbids pod sysctls; set net.ipv4.ip_unprivileged_port_start=0 on the node
-# (see k3s_tuning.extra_sysctls in dev-node-0 host vars).
+# (see k3s.tuning.extra_sysctls in dev-node-0 host vars).
 # https://kgateway.dev/docs/envoy/latest/setup/customize/configs/
 kubectl apply -f- <<EOF
 apiVersion: gateway.kgateway.dev/v1alpha1
