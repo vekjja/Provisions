@@ -22,7 +22,7 @@ helm repo update
 kubectl create namespace observability
 
 
-# Create Grafana admin credentials secret from GCP Secret Manager using External Secrets Operator
+# Create Grafana admin credentials secret from AWS Secrets Manager using External Secrets Operator
 cat <<EOF | kubectl apply -f -
 ---
 apiVersion: external-secrets.io/v1
@@ -33,7 +33,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: gcp-secret-manager
+    name: aws-secrets-manager
     kind: ClusterSecretStore
   target:
     name: grafana-admin-credentials
