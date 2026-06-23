@@ -33,7 +33,7 @@ metadata:
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: gcp-secrets-manager
+    name: aws-secrets-manager
     kind: ClusterSecretStore
   target:
     name: grafana-admin-credentials
@@ -56,7 +56,7 @@ EOF
 helm upgrade --install grafana prometheus-community/kube-prometheus-stack \
   --namespace "observability" \
   --create-namespace \
-  --values ./k3s/helm/values/grafana.values.yaml
+  --values ./k3s/helm/values/grafana.dev-node-0.values.yaml
 
 # Install Loki for logging
 # See values file for configuration

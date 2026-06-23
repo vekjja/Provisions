@@ -1,0 +1,146 @@
+# Default values for kube-prometheus-stack
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+
+# Enable Grafana (included in kube-prometheus-stack, pre-configured with Prometheus)
+grafana:
+  enabled: true
+
+  # Admin credentials
+  admin:
+    existingSecret: grafana-admin-credentials
+    userKey: admin-user
+    passwordKey: admin-password
+
+  # Persistence
+  persistence:
+    enabled: true
+    storageClassName: "local-path"
+    size: 10Gi
+
+  # Disable init container that changes ownership (causes issues with local-path storage)
+  initChownData:
+    enabled: false
+
+  # --- DISABLED LEGACY INGRESS ---
+  ingress:
+    enabled: false
+
+  # --- ENABLED NATIVE HTTPROUTE (GATEWAY API) ---
+  route:
+    main:
+      enabled: true
+      kind: HTTPRoute
+      apiVersion: gateway.networking.k8s.io/v1
+      parentRefs:
+      - name: http-gateway
+        namespace: kgateway-system
+      hostnames:
+      - graf.authriz.io
+      matches:
+      - path:
+          type: PathPrefix
+          value: /
+
+  # Resources
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Service
+  service:
+    type: ClusterIP
+    port: 80
+
+  # Dashboard configuration
+  defaultDashboardsEnabled: false
+
+  # Public URL for share links (gateway terminates TLS on 443).
+  # Use env vars only — grafana.ini in values has caused helm template errors.
+  env:
+    GF_SERVER_ROOT_URL: "https://graf.authriz.io/"
+    GF_SERVER_DOMAIN: "graf.authriz.io"
+    GF_SERVER_PROTOCOL: "http"
+
+  # Sidecar for auto-discovering dashboards from ConfigMaps
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+    datasources:
+      enabled: false
+      defaultDatasourceEnabled: false
+    searchNamespace: ALL
+
+  # Datasources - configure Prometheus for metrics and Loki for logging
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: prometheus
+        type: prometheus
+        access: proxy
+        url: http://grafana-kube-prometheus-st-prometheus:9090
+        isDefault: true
+        editable: true
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki:3100
+        isDefault: false
+        jsonData:
+          maxLines: 1000
+
+# Prometheus configuration
+prometheus:
+  prometheusSpec:
+    scrapeInterval: 6s
+    scrapeTimeout: 5s
+    evaluationInterval: 15s
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "local-path"
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 50Gi
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
+  service:
+    type: ClusterIP
+    port: 9090
+  ingress:
+    enabled: false
+
+# Alertmanager configuration (disabled for now)
+alertmanager:
+  enabled: false
+
+# Node Exporter (collects node metrics)
+nodeExporter:
+  enabled: true
+
+# Kube State Metrics (collects Kubernetes resource metrics)
+kubeStateMetrics:
+  enabled: true
+
+# Prometheus Operator
+prometheusOperator:
+  enabled: true
+  resources:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
