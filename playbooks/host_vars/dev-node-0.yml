@@ -13,20 +13,24 @@ files:
 
 firewall_rules:
   - { port: '22', proto: 'tcp', comment: 'SSH' }
+  - { port: '80', proto: 'tcp', comment: 'HTTP' }
+  - { port: '443', proto: 'tcp', comment: 'HTTPS' }
   - { port: '6443', proto: 'tcp', comment: 'Kubernetes API' }
   - { port: '51820', proto: 'udp', comment: 'WireGuard VPN' }
 
 k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
   kubeconfig:
+    merge: true
     context: dev-node-0
-    server: 100.56.134.72
+    server: 34.237.174.110
     remote: ~/.kube/k3sconfig
     local: "{{ lookup('env', 'HOME') }}/.kube/dev-node-0"
   args:
     - --disable=traefik
-    - --tls-san 100.56.134.72
-    - --tls-san dev-node-0.livingroom.cloud
     - --disable=servicelb
+    - --tls-san dev-node-0.livingroom.cloud
+    - --tls-san 34.237.174.110
+    - --node-external-ip=34.237.174.110
     - --prefer-bundled-bin
     - --write-kubeconfig-mode 644
     - --write-kubeconfig ~/.kube/k3sconfig
