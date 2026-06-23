@@ -26,7 +26,7 @@ txtOwnerId: dev-node-0
 txtPrefix: externaldns
 
 extraArgs:
-- --default-targets=34.237.174.110
+- --default-targets=52.200.204.147
 - --force-default-targets
 # With hostNetwork + ClusterIP gateways, the gateway-httproute source publishes the
 # Service ClusterIP unless a target annotation exists; force default when needed.

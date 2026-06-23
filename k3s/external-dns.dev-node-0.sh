@@ -32,38 +32,4 @@ kubectl create secret generic cloudflare-api-token \
 # Install/upgrade ExternalDNS (official chart)
 helm upgrade --install ext-dns external-dns/external-dns \
   --namespace external-dns \
-  --values ./k3s/helm/values/external-dns.values.yaml 
-
-
-# Example DNSEndpoint
-# cat <<EOF | kubectl apply -f -
-# ---
-# apiVersion: externaldns.k8s.io/v1alpha1
-# kind: DNSEndpoint
-# metadata:
-#   name: example-livingroom-cloud-dns
-#   namespace: external-dns
-# spec:
-#   endpoints:
-#   - dnsName: example.livingroom.cloud
-#     recordType: A
-#     recordTTL: 300
-#     targets: [ "174.44.105.210" ]
-# ---
-# EOF
-
-# cat <<EOF | kubectl apply -f -
-# ---
-# apiVersion: externaldns.k8s.io/v1alpha1
-# kind: DNSEndpoint
-# metadata:
-#   name: example-authriz-io-dns
-#   namespace: external-dns
-# spec:
-#   endpoints:
-#   - dnsName: example.authriz.io
-#     recordType: A
-#     recordTTL: 300
-#     targets: [ "34.237.174.110" ]
-# ---
-# EOF
+  --values ./k3s/helm/values/external-dns.dev-node-0.values.yaml

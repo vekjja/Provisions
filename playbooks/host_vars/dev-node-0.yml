@@ -22,15 +22,15 @@ k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
   kubeconfig:
     merge: true
     context: dev-node-0
-    server: 34.237.174.110
+    server: 52.200.204.147
     remote: ~/.kube/k3sconfig
     local: "{{ lookup('env', 'HOME') }}/.kube/dev-node-0"
   args:
     - --disable=traefik
     - --disable=servicelb
     - --tls-san dev-node-0.livingroom.cloud
-    - --tls-san 34.237.174.110
-    - --node-external-ip=34.237.174.110
+    - --tls-san 52.200.204.147
+    - --node-external-ip=52.200.204.147
     - --prefer-bundled-bin
     - --write-kubeconfig-mode 644
     - --write-kubeconfig ~/.kube/k3sconfig

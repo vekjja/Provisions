@@ -65,7 +65,7 @@ metadata:
   name: http-gateway
   namespace: kgateway-system
   annotations:
-    external-dns.alpha.kubernetes.io/target: "34.237.174.110"
+    external-dns.alpha.kubernetes.io/target: "52.200.204.147"
     cert-manager.io/cluster-issuer: "cloudflare-letsencrypt-production"
 spec:
   gatewayClassName: kgateway
