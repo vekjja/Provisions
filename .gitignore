@@ -15,3 +15,5 @@ playbooks/group_vars/windows.yml
 
 # GCP
 gcp-eso-key.json
+
+*.pdf

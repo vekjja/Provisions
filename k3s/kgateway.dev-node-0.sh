@@ -91,5 +91,16 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: auto-authriz-io-tls
+          - name: authriz-io-wildcard
+    - name: authriz-io-root
+      protocol: HTTPS
+      port: 443
+      hostname: "authriz.io"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: authriz-io-root
 EOF
