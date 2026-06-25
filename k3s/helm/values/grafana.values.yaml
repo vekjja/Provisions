@@ -64,6 +64,8 @@ grafana:
     GF_SERVER_ROOT_URL: "https://graf.livingroom.cloud/"
     GF_SERVER_DOMAIN: "graf.livingroom.cloud"
     GF_SERVER_PROTOCOL: "http"
+     # Map to [users] viewers_can_edit = true in grafana.ini
+    GF_USERS_VIEWERS_CAN_EDIT: "true"
 
   # Sidecar for auto-discovering dashboards from ConfigMaps
   sidecar:

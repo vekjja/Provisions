@@ -64,6 +64,9 @@ grafana:
     GF_SERVER_ROOT_URL: "https://graf.authriz.io/"
     GF_SERVER_DOMAIN: "graf.authriz.io"
     GF_SERVER_PROTOCOL: "http"
+    # Viewers cannot use Explore (logs) unless this is true. They can edit panels
+    # but cannot save dashboards or create new ones.
+    GF_USERS_VIEWERS_CAN_EDIT: "true"
 
   # Sidecar for auto-discovering dashboards from ConfigMaps
   sidecar:
