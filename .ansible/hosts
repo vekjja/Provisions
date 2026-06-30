@@ -2,6 +2,7 @@
 
 [local]
 macbook ansible_connection=local
+GameBox ansible_connection=local
 
 [remote]
 dev-node-0

@@ -1,0 +1,39 @@
+hostname: GameBox
+
+packages:
+  - steam
+  - gparted
+
+files:
+  user:
+    - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
+    - { src: 'dotfiles/.zshrc-linux', dest: '~/.zshrc' }
+    - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
+    - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
+
+fs_mounts:
+  - {
+    path: /mnt/ssd/Y,
+    src: "UUID=146801F76801D7FE",
+    fstype: ntfs,
+    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  }
+  - {
+    path: /mnt/ssd/Z,
+    src: "UUID=4AEC51FDEC51E3AB",
+    fstype: ntfs,
+    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  }
+  - {
+    path: /mnt/ssd/X,
+    src: "UUID=bf8215d6-4043-4430-946f-d62580ebf516",
+    fstype: ext4,
+    opts: "defaults,nofail,errors=remount-ro",
+  }
+
+# firewall_rules:
+#   - { port: '22', proto: 'tcp', comment: 'SSH' }
+#   - { port: '80', proto: 'tcp', comment: 'HTTP' }
+#   - { port: '443', proto: 'tcp', comment: 'HTTPS' }
+#   - { port: '6443', proto: 'tcp', comment: 'Kubernetes API' }
+#   - { port: '51820', proto: 'udp', comment: 'WireGuard VPN' }

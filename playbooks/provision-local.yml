@@ -5,6 +5,8 @@
   roles:
     - { role: packages, tags: ['packages', 'casks'] }
     - { role: nerd-fonts, tags: ['nerd-fonts'] }
-    - { role: files, tags: ['files'] }
     - { role: shell, tags: ['shell'] }
+    - { role: files, tags: ['files'] }
+    - { role: fstab, tags: ['fstab'] }
+    - { role: hostname, tags: ['hostname'] }
     - { role: golang, tags: ['go'] }
