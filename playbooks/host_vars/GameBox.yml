@@ -16,13 +16,13 @@ fs_mounts:
     path: /mnt/ssd/Y,
     src: "UUID=146801F76801D7FE",
     fstype: ntfs,
-    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5,uid=1000,gid=1000,rw,exec,umask=000,fmask=000,dmask=000",
   }
   - {
     path: /mnt/ssd/Z,
     src: "UUID=4AEC51FDEC51E3AB",
     fstype: ntfs,
-    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+    opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5,uid=1000,gid=1000,rw,exec,umask=000,fmask=000,dmask=000",
   }
   - {
     path: /mnt/ssd/X,

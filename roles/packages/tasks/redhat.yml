@@ -1,0 +1,19 @@
+- name: Install Fedora Workstation Repositories
+  ansible.builtin.package:
+    name: fedora-workstation-repositories
+    state: present
+    update_cache: true
+  become: true
+
+- name: Enable Google Chrome repository
+  ansible.builtin.command: dnf config-manager setopt google-chrome.enabled=1
+  become: "{{ use_sudo }}"
+  become_flags: "{{ '-n' if become_flags_non_interactive else omit }}"
+
+
+- name: Install Google Chrome
+  ansible.builtin.package:
+    name: google-chrome-stable
+    state: present
+    update_cache: true
+  become: true
