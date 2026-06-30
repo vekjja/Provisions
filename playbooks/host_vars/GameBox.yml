@@ -14,6 +14,12 @@ files:
 
 fs_mounts:
   - {
+    path: /mnt/ssd/X,
+    src: "UUID=bf8215d6-4043-4430-946f-d62580ebf516",
+    fstype: ext4,
+    opts: "defaults,nofail,errors=remount-ro",
+  }
+  - {
     path: /mnt/ssd/Y,
     src: "UUID=146801F76801D7FE",
     fstype: ntfs,
@@ -24,12 +30,6 @@ fs_mounts:
     src: "UUID=4AEC51FDEC51E3AB",
     fstype: ntfs,
     opts: "defaults,nobootwait,nofail,errors=remount-ro,x-systemd.device-timeout=5,uid=1000,gid=1000,rw,exec,umask=000,fmask=000,dmask=000",
-  }
-  - {
-    path: /mnt/ssd/X,
-    src: "UUID=bf8215d6-4043-4430-946f-d62580ebf516",
-    fstype: ext4,
-    opts: "defaults,nofail,errors=remount-ro",
   }
 
 # firewall_rules:
