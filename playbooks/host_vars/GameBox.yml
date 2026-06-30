@@ -1,8 +1,9 @@
 hostname: GameBox
 
 packages:
-  - steam
   - gparted
+  - piper
+  - steam
 
 files:
   user:
