@@ -5,8 +5,6 @@ packages:
   - gparted
   - piper
   - steam
-  # - ntfs-3g 
-  - fuse
 
 files:
   user:
@@ -30,9 +28,9 @@ fs_mounts:
   }
   - {
     path: /mnt/ssd/Z,
-    src: "UUID=4AEC51FDEC51E3AB",
-    fstype: ntfs3,
-    opts: "defaults,nofail,x-systemd.device-timeout=5,uid=1000,gid=1000,rw,exec,windows_names",
+    src: "UUID=fb721a89-8d5e-4c06-bd07-519fe4876f53",
+    fstype: ext4,
+    opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
   }
   - {
     path: /mnt/smb/tera,
