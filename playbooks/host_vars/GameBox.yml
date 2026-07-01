@@ -1,6 +1,7 @@
 hostname: GameBox
 
 packages:
+  - cifs-utils
   - gparted
   - piper
   - steam
@@ -33,6 +34,19 @@ fs_mounts:
     fstype: ntfs3,
     opts: "defaults,nofail,x-systemd.device-timeout=5,uid=1000,gid=1000,rw,exec,windows_names",
   }
+  - {
+    path: /mnt/smb/tera,
+    src: "//10.0.0.10/tera",
+    fstype: cifs,
+    opts: "credentials=/home/kev/.smbcreds,uid=1000,gid=1000,_netdev,nofail,x-systemd.automount",
+  }
+  - {
+    path: /mnt/smb/barracuda,
+    src: "//10.0.0.10/barracuda",
+    fstype: cifs,
+    opts: "credentials=/home/kev/.smbcreds,uid=1000,gid=1000,_netdev,nofail,x-systemd.automount",
+  }
+
 
 # firewall_rules:
 #   - { port: '22', proto: 'tcp', comment: 'SSH' }

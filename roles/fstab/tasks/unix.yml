@@ -1,0 +1,17 @@
+- name: Manage Ansible fstab entries
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/fstab
+    marker_begin: "###### Ansible Managed Entries"
+    marker_end: "###### END Ansible Managed"
+    block: |
+      {% for mount in fs_mounts | default([]) %}
+      {{ mount.src }} {{ mount.path }} {{ mount.fstype }} {{ mount.opts }} 0 0
+      {% endfor %}
+    insertafter: EOF
+    backup: true
+
+- name: Mount filesystems from fstab
+  become: true
+  ansible.builtin.command: mount -a
+  changed_when: false

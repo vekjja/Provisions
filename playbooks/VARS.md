@@ -175,6 +175,8 @@ Notes:
 Used by: `roles/fstab/tasks/main.yml`  
 Applies to: primarily remote Linux
 
+Ansible manages a block at the end of `/etc/fstab` between `###### Ansible Managed Entries` and `###### END Ansible Managed`. Add or remove items in `fs_mounts` and re-run the `fstab` tag to sync.
+
 ```yaml
 fs_mounts:
   - path: /mnt/ssd/movies
