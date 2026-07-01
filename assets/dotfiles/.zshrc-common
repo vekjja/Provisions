@@ -422,6 +422,9 @@ if command -v autojump &>/dev/null; then
   # Ubuntu/Debian package (covers Ubuntu, Pi OS, Kali)
   elif [ -f /usr/share/autojump/autojump.zsh ]; then
     . /usr/share/autojump/autojump.zsh
+  # Fedora/RHEL package (ships bash integration only)
+  elif [ -f /usr/share/autojump/autojump.bash ]; then
+    . /usr/share/autojump/autojump.bash
   # Mac with MacPorts
   elif [ -f /opt/local/etc/profile.d/autojump.zsh ]; then
     . /opt/local/etc/profile.d/autojump.zsh
@@ -431,6 +434,9 @@ if command -v autojump &>/dev/null; then
   # System-wide manual installation
   elif [ -f /etc/profile.d/autojump.zsh ]; then
     . /etc/profile.d/autojump.zsh
+  # Gentoo and other distros with profile.d dispatcher
+  elif [ -f /etc/profile.d/autojump.sh ]; then
+    . /etc/profile.d/autojump.sh
   fi
 fi
 
