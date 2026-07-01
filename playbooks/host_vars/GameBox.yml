@@ -5,7 +5,7 @@ packages:
   - gparted
   - piper
   - steam
-  - ntfs-3g 
+  # - ntfs-3g 
   - fuse
 
 files:
@@ -20,13 +20,13 @@ fs_mounts:
     path: /mnt/ssd/X,
     src: "UUID=bf8215d6-4043-4430-946f-d62580ebf516",
     fstype: ext4,
-    opts: "defaults,nofail,errors=remount-ro",
+    opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
   }
   - {
     path: /mnt/ssd/Y,
-    src: "UUID=146801F76801D7FE",
-    fstype: ntfs-3g,
-    opts: "defaults,nofail,x-systemd.device-timeout=5,uid=1000,gid=1000,rw,exec,windows_names,lowntfs-3g",
+    src: "UUID=51ad482d-247e-4fdc-8f3b-d43d1e417e38",
+    fstype: ext4,
+    opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
   }
   - {
     path: /mnt/ssd/Z,
