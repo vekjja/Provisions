@@ -54,6 +54,18 @@ packages:
   - k9s
 ```
 
+### 📡 `wakeonlan` (Wake-on-LAN)
+
+Used by: `roles/packages/tasks/wakeonlan.yml` (via `roles/packages/tasks/redhat.yml`)  
+Applies to: Fedora/RedHat only (when `wakeonlan: true`)
+
+Enables magic-packet Wake-on-LAN on the host's default network interface and persists it across reboots via a NetworkManager dispatcher script. Also requires WoL enabled in BIOS/UEFI.
+
+```yaml
+# playbooks/host_vars/GameBox.yml
+wakeonlan: true
+```
+
 ### 🖥️ `appimages` (AppImage desktop shortcuts)
 
 Used by: `roles/packages/tasks/appimages.yml` (via `roles/packages/tasks/redhat.yml`)  

@@ -26,6 +26,10 @@
   become: "{{ use_sudo }}"
   when: k9s | default(false)
 
+- name: Include Wake-on-LAN tasks
+  ansible.builtin.include_tasks: wakeonlan.yml
+  when: wakeonlan | default(false)
+
 - name: Install Fedora Workstation Repositories
   ansible.builtin.package:
     name: fedora-workstation-repositories
