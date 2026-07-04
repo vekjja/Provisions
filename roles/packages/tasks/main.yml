@@ -1,25 +1,16 @@
-- name: Check passwordless sudo
-  ansible.builtin.command: sudo -n true
-  register: passwordless_sudo_check
-  changed_when: false
-  failed_when: false
-  when: ansible_facts['os_family'] != 'Darwin'
-
 - name: Set Privilege Escalation Requirements
   ansible.builtin.set_fact:
     use_sudo: "{{ ansible_facts['os_family'] != 'Darwin' }}"
-    become_flags_non_interactive: "{{ passwordless_sudo_check.rc | default(1) == 0 }}"
 
-- name: Install Unix Packages
+- name: Install Common Packages
   ansible.builtin.package:
     name: "{{ unix_packages }}"
     update_cache: true
     state: present
   become: "{{ use_sudo }}"
-  become_flags: "{{ '-n' if become_flags_non_interactive else omit }}"
   when: unix_packages is defined
 
-- name: Install OS-Specific Packages (Mac/Linux)
+- name: Install Selected Packages (Mac/Linux)
   ansible.builtin.package:
     name: "{{ packages | default([]) }}"
     update_cache: true
@@ -27,11 +18,10 @@
   become: "{{ use_sudo }}"
   when: packages is defined
 
-- name: Include Darwin Tasks
-  ansible.builtin.include_tasks: darwin.yml
-  when: ansible_facts['os_family'] == 'Darwin'
-
 - name: Include Fedora/RedHat Tasks
   ansible.builtin.include_tasks: redhat.yml
   when: ansible_facts['os_family'] == 'RedHat'
-  tags: fedora, redhat
+
+- name: Include Darwin Tasks
+  ansible.builtin.include_tasks: darwin.yml
+  when: ansible_facts['os_family'] == 'Darwin'

@@ -6,6 +6,11 @@ packages:
   - piper
   - steam
 
+k9s: true
+kubectl: true
+googleChrome: true
+appimages: /mnt/ssd/X/Applications
+
 files:
   user:
     - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }

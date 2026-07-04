@@ -2,4 +2,4 @@
 - name: Unix Tasks
   ansible.builtin.include_tasks: unix.yml
   when: k3s is defined
-  tags: [k3s, get-kubeconfig]
+  tags: [k3s, kubeconfig]

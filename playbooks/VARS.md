@@ -54,6 +54,23 @@ packages:
   - k9s
 ```
 
+### 🖥️ `appimages` (AppImage desktop shortcuts)
+
+Used by: `roles/packages/tasks/appimages.yml` (via `roles/packages/tasks/redhat.yml`)  
+Applies to: Fedora/RedHat only (when `appimages` is defined)
+
+Scans the directory for `*.appimage` / `*.AppImage` files and creates `.desktop` entries in `~/.local/share/applications`, extracts icons into `~/.local/share/icons/appimages`, and ensures AppImages are executable. Requires FUSE (`fuse`, `fuse-libs`, `fuse3`, `fuse3-libs`).
+
+```yaml
+# playbooks/host_vars/GameBox.yml
+appimages: /mnt/ssd/X/Applications
+```
+
+Notes:
+- Omit `appimages` entirely on hosts that should not get desktop shortcuts.
+- Name, icon, and categories are read from each AppImage's embedded `.desktop` file when present; otherwise the filename is used for the display name.
+- Re-run the playbook after updating an AppImage to refresh shortcuts (delete `~/.local/share/icons/appimages/<slug>.stamp` to force a refresh).
+
 ### 🍺 `casks` (macOS apps)
 
 Used by: `roles/packages/tasks/darwin.yml`  
@@ -217,7 +234,7 @@ k3s:
 
 Notes:
 - `args` is appended to the installer command: `/tmp/k3s.sh {{ k3s.args | join(' ') }}`
-- The `get-kubeconfig` tag fetches `k3s.kubeconfig.remote` to `k3s.kubeconfig.local`
+- The `kubeconfig` tag fetches `k3s.kubeconfig.remote` to `k3s.kubeconfig.local`
 
 ### 🧩 `k3s_tuning` (inotify + NOFILE tuning for Kubernetes log tailing)
 

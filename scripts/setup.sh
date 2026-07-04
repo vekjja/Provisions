@@ -104,16 +104,6 @@ if [[ "${mode}" == "remote" ]]; then
   ansiblePlaybook="playbooks/provision.yml"
 fi
 
-# If sudo requires a password, prompt Ansible for it (otherwise become tasks can fail)
-if isInstalled sudo; then
-  if ! sudo -n true >/dev/null 2>&1; then
-    # Only add prompt when running interactively
-    if [[ -t 0 ]]; then
-      ansibleArgs+=(--ask-become-pass)
-    fi
-  fi
-fi
-
 echo "Running Setup: ansible-playbook ${ansibleArgs[*]} ${ansiblePlaybook}"
 ansible-playbook "${ansibleArgs[@]}" "${ansiblePlaybook}"
 exitOnError $? "Running Ansible Playbook"
