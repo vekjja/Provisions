@@ -22,7 +22,7 @@
     src: "{{ k3s.kubeconfig.remote }}"
     dest: "{{ k3s.kubeconfig.local }}"
     flat: true
-  tags: get-kubeconfig
+  tags: kubeconfig
 
 - name: Configure local kubeconfig
   ansible.builtin.include_tasks:
@@ -32,9 +32,9 @@
       become: false
       run_once: true
       tags:
-        - get-kubeconfig
+        - kubeconfig
         - k3s
   when: k3s.kubeconfig.context is defined or k3s.kubeconfig.server is defined
   tags:
-    - get-kubeconfig
+    - kubeconfig
     - k3s

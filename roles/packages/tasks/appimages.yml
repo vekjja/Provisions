@@ -1,0 +1,37 @@
+- name: Install AppImage FUSE dependencies
+  ansible.builtin.package:
+    name:
+      - fuse
+      - fuse-libs
+      - fuse3
+      - fuse3-libs
+    state: present
+  become: "{{ use_sudo }}"
+
+- name: Check AppImages directory exists
+  ansible.builtin.stat:
+    path: "{{ appimages }}"
+  register: appimages_dir
+
+- name: Find AppImages in directory
+  ansible.builtin.find:
+    paths: "{{ appimages }}"
+    patterns:
+      - "*.appimage"
+      - "*.AppImage"
+    file_type: file
+  register: appimage_files
+  when: appimages_dir.stat.exists and appimages_dir.stat.isdir
+
+- name: Install AppImage desktop entries
+  ansible.builtin.script: >-
+    install-appimage-desktop.sh
+    {{ item.path | quote }}
+    {{ lookup('env', 'HOME') | quote }}
+  loop: "{{ appimage_files.files | default([]) | sort(attribute='path') }}"
+  when: appimage_files.matched | default(0) > 0
+
+- name: Update desktop database
+  ansible.builtin.command: update-desktop-database "{{ lookup('env', 'HOME') }}/.local/share/applications"
+  changed_when: false
+  when: appimage_files.matched | default(0) > 0

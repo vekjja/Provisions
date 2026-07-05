@@ -1,0 +1,57 @@
+- name: Enable kubectx COPR repository
+  ansible.builtin.command: dnf copr enable -y audron/kubectx
+  args:
+    creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:audron:kubectx.repo
+  become: "{{ use_sudo }}"
+  when: kubectl | default(false)
+
+- name: Install kubectl
+  ansible.builtin.package:
+    name: kubernetes1.36-client
+    state: present
+  become: "{{ use_sudo }}"
+  when: kubectl | default(false)
+
+- name: Install kubectx
+  ansible.builtin.package:
+    name: kubectx
+    state: present
+  become: "{{ use_sudo }}"
+  when: kubectl | default(false)
+
+- name: Install k9s
+  ansible.builtin.package:
+    name: k9s
+    state: present
+  become: "{{ use_sudo }}"
+  when: k9s | default(false)
+
+- name: Include Wake-on-LAN tasks
+  ansible.builtin.include_tasks: wakeonlan.yml
+  when: wakeonlan | default(false)
+
+- name: Install Fedora Workstation Repositories
+  ansible.builtin.package:
+    name: fedora-workstation-repositories
+    state: present
+    update_cache: true
+  become: true
+  when: googleChrome | default(false)
+
+- name: Enable Google Chrome repository
+  ansible.builtin.command: dnf config-manager setopt google-chrome.enabled=1
+  become: "{{ use_sudo }}"
+  when: googleChrome | default(false)
+
+
+- name: Install Google Chrome
+  ansible.builtin.package:
+    name: google-chrome-stable
+    state: present
+    update_cache: true
+  become: true
+  when: googleChrome | default(false)
+
+- name: Include AppImage desktop entry tasks
+  ansible.builtin.include_tasks: appimages.yml
+  when: appimages is defined

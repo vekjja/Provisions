@@ -2,22 +2,25 @@
   ansible.builtin.set_fact:
     use_sudo: "{{ ansible_facts['os_family'] != 'Darwin' }}"
 
-- name: Install Unix Packages
+- name: Install Common Packages
   ansible.builtin.package:
     name: "{{ unix_packages }}"
     update_cache: true
     state: present
   become: "{{ use_sudo }}"
-  become_flags: "-n"
   when: unix_packages is defined
 
-- name: Install OS-Specific Packages (Mac/Linux)
+- name: Install Selected Packages (Mac/Linux)
   ansible.builtin.package:
     name: "{{ packages | default([]) }}"
     update_cache: true
     state: present
   become: "{{ use_sudo }}"
   when: packages is defined
+
+- name: Include Fedora/RedHat Tasks
+  ansible.builtin.include_tasks: redhat.yml
+  when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Include Darwin Tasks
   ansible.builtin.include_tasks: darwin.yml

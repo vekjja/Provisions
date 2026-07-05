@@ -1,0 +1,61 @@
+hostname: GameBox
+
+packages:
+  - cifs-utils
+  - gparted
+  - piper
+  - steam
+
+k9s: true
+kubectl: true
+wakeonlan: true
+googleChrome: true
+appimages: /mnt/ssd/X/Applications
+
+files:
+  user:
+    - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }
+    - { src: 'dotfiles/.zshrc-linux', dest: '~/.zshrc' }
+    - { src: 'configs/ssh.config', dest: '~/.ssh/config' }
+    - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
+    - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
+
+fs_mounts:
+  - {
+    path: /mnt/ssd/X,
+    src: "UUID=bf8215d6-4043-4430-946f-d62580ebf516",
+    fstype: ext4,
+    opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  }
+  - {
+    path: /mnt/ssd/Y,
+    src: "UUID=51ad482d-247e-4fdc-8f3b-d43d1e417e38",
+    fstype: ext4,
+    opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  }
+  - {
+    path: /mnt/ssd/Z,
+    src: "UUID=fb721a89-8d5e-4c06-bd07-519fe4876f53",
+    fstype: ext4,
+    opts: "defaults,nofail,errors=remount-ro,x-systemd.device-timeout=5",
+  }
+  - {
+    path: /mnt/smb/tera,
+    src: "//10.0.0.10/tera",
+    fstype: cifs,
+    opts: "credentials=/home/kev/.smbcreds,uid=1000,gid=1000,_netdev,nofail,x-systemd.automount",
+  }
+  - {
+    path: /mnt/smb/barracuda,
+    src: "//10.0.0.10/barracuda",
+    fstype: cifs,
+    opts: "credentials=/home/kev/.smbcreds,uid=1000,gid=1000,_netdev,nofail,x-systemd.automount",
+  }
+
+
+# firewall_rules:
+#   - { port: '22', proto: 'tcp', comment: 'SSH' }
+#   - { port: '80', proto: 'tcp', comment: 'HTTP' }
+#   - { port: '443', proto: 'tcp', comment: 'HTTPS' }
+#   - { port: '6443', proto: 'tcp', comment: 'Kubernetes API' }
+#   - { port: '51820', proto: 'udp', comment: 'WireGuard VPN' }
