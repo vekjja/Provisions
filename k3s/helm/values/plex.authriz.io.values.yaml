@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: linuxserver/plex
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   tag: "latest"
 
 imagePullSecrets: []
@@ -46,7 +46,7 @@ httpRoute:
   - name: http-gateway
     namespace: kgateway-system
   hostnames:
-  - "plex.livingroom.cloud"
+  - "plex.authriz.io"
   rules:
   - matches:
     - path:
@@ -56,24 +56,19 @@ httpRoute:
 persistence:
   movies:
     mountPath: /data/Movies
-    storageClass: "ssd-movies"
-    size: 100Gi
-    accessMode: ReadWriteMany
+    storageClass: "local-path"
+    size: 1Gi
+    accessMode: ReadWriteOnce
   series:
     mountPath: /data/Series
-    storageClass: "ssd-series"
-    size: 100Gi
-    accessMode: ReadWriteMany
-  seriesExt:
-    mountPath: /data/SeriesExt
-    storageClass: "ssd-series-ext"
-    size: 100Gi
-    accessMode: ReadWriteMany
+    storageClass: "local-path"
+    size: 1Gi
+    accessMode: ReadWriteOnce
   config:
     mountPath: /config
-    storageClass: "plex-config"
-    size: 3Gi
-    accessMode: ReadWriteMany
+    storageClass: "local-path"
+    size: 1Gi
+    accessMode: ReadWriteOnce
 
 resources: {}
 
