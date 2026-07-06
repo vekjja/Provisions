@@ -54,6 +54,22 @@ packages:
   - k9s
 ```
 
+### 🐍 `openrazer` (Razer device drivers)
+
+Used by: `roles/packages/tasks/openrazer.yml` (via `roles/packages/tasks/redhat.yml`)  
+Applies to: Fedora/RedHat only (when `openrazer: true`)
+
+Installs `kernel-devel` (required on Fedora to avoid `kernel-debug-devel` issues), adds the OpenRazer repository, and installs `openrazer-meta`. Repository setup varies by Fedora version:
+
+- **Fedora 41+** (and Nobara 41+): `dnf config-manager addrepo --from-repofile=...`
+- **Fedora Rawhide**: OpenSUSE build service repository
+- **Fedora 40 and earlier**: `dnf config-manager --add-repo ...`
+
+```yaml
+# playbooks/host_vars/GameBox.yml
+openrazer: true
+```
+
 ### 📡 `wakeonlan` (Wake-on-LAN)
 
 Used by: `roles/packages/tasks/wakeonlan.yml` (via `roles/packages/tasks/redhat.yml`)  

@@ -1,0 +1,52 @@
+- name: Set OpenRazer platform facts
+  ansible.builtin.set_fact:
+    fedora_rawhide: "{{ lookup('file', '/etc/fedora-release') is search('(?i)rawhide') }}"
+    fedora_major_version: "{{ ansible_facts['distribution_major_version'] | int }}"
+
+- name: Install kernel-devel
+  ansible.builtin.package:
+    name: kernel-devel
+    state: present
+    update_cache: true
+  become: "{{ use_sudo }}"
+
+- name: Find OpenRazer repository
+  ansible.builtin.find:
+    paths: /etc/yum.repos.d
+    patterns: '*razer*'
+  register: openrazer_repo_files
+
+- name: Add OpenRazer repository (Fedora Rawhide)
+  ansible.builtin.command: >-
+    dnf config-manager addrepo
+    --from-repofile=https://download.opensuse.org/repositories/hardware:/razer/Fedora_Rawhide/hardware:razer.repo
+  become: "{{ use_sudo }}"
+  when:
+    - openrazer_repo_files.matched == 0
+    - fedora_rawhide
+
+- name: Add OpenRazer repository (Fedora 41 and later)
+  ansible.builtin.command: >-
+    dnf config-manager addrepo
+    --from-repofile=https://openrazer.github.io/hardware:razer.repo
+  become: "{{ use_sudo }}"
+  when:
+    - openrazer_repo_files.matched == 0
+    - not fedora_rawhide
+    - fedora_major_version >= 41
+
+- name: Add OpenRazer repository (Fedora 40 and earlier)
+  ansible.builtin.command: >-
+    dnf config-manager --add-repo https://openrazer.github.io/hardware:razer.repo
+  become: "{{ use_sudo }}"
+  when:
+    - openrazer_repo_files.matched == 0
+    - not fedora_rawhide
+    - fedora_major_version <= 40
+
+- name: Install OpenRazer
+  ansible.builtin.package:
+    name: openrazer-meta
+    state: present
+    update_cache: true
+  become: "{{ use_sudo }}"
