@@ -279,7 +279,7 @@ k3s_tuning:
   enabled: true
   nofile_limit: 1048576
   inotify_max_user_watches: 1048576
-  inotify_max_user_instances: 8192
+  inotify_max_user_instances: 32768
   inotify_max_queued_events: 32768
   fs_file_max: 2097152
   shutdown_timeout_sec: 30  # Reduces containerd shutdown delays (default: 30s, systemd default: 90s)

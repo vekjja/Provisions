@@ -47,6 +47,10 @@ k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
     - --write-kubeconfig ~/.kube/k3sconfig
     - --default-local-storage-path /mnt/ssd/pny250/k3s/storage
 
+k3s_tuning:
+  enabled: true
+  inotify_max_user_instances: 32768
+
 wireguard:
   server_endpoint: livingroom.cloud
   interfaces:

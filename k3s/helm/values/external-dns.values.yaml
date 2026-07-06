@@ -28,13 +28,13 @@ txtOwnerId: mini-cloud
 txtPrefix: externaldns
 
 extraArgs:
-- --default-targets=174.44.105.210
+- --default-targets=174.44.105.230
+- --force-default-targets
+# Public WAN IP for all managed DNS records. Do not duplicate on Gateway/HTTPRoute annotations.
 
 sources:
 - crd
 - gateway-httproute
-- ingress
-- service
 
 crd:
   create: true

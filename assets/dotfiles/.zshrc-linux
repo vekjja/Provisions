@@ -5,9 +5,10 @@ for file in ~/.zshrc-*; do
   [ -e "$file" ] && source "$file"
 done
 
-if [ -f ~/.api-keys ]; then
+if [ -f ~/.apks ]; then
   source ~/.apks
 fi
+
 
 ## Go
 export GOROOT=/usr/local/go

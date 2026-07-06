@@ -3,6 +3,7 @@ hostname: GameBox
 packages:
   - cifs-utils
   - gparted
+  - helm
   - piper
   - steam
 

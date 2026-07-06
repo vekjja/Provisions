@@ -42,7 +42,6 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "cloudflare-letsencrypt-production"
     external-dns.alpha.kubernetes.io/hostname: plex.livingroom.cloud
-    external-dns.alpha.kubernetes.io/target: "174.44.105.210"
   hosts:
   - host: plex.livingroom.cloud
     paths:
