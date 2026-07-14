@@ -1,7 +1,3 @@
-- name: Set privilege escalation variable
-  ansible.builtin.set_fact:
-    use_sudo: "{{ ansible_facts['os_family'] != 'Darwin' }}"
-
 - name: Create Unix Directories
   ansible.builtin.file:
     path: "{{ item }}"
@@ -27,7 +23,7 @@
   # when: not oh_my_zsh.stat.exists
 
 - name: Ensure unzip is installed (Required for Oh My Posh)
-  become: "{{ use_sudo }}"
+  become: true
   ansible.builtin.package:
     name: unzip
     state: present

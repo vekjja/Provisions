@@ -1,0 +1,94 @@
+- name: Fetch latest RustDesk release version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/rustdesk/rustdesk/releases/latest
+    return_content: true
+  register: rustdesk_latest_release
+  when: rustdesk_version is not defined
+
+- name: Resolve RustDesk version
+  ansible.builtin.set_fact:
+    rustdesk_resolved_version: "{{ rustdesk_version | default(rustdesk_latest_release.json.tag_name | default('1.4.9')) }}"
+
+- name: Set RustDesk RPM architecture suffix
+  ansible.builtin.set_fact:
+    rustdesk_rpm_arch: "{{ 'aarch64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}"
+
+- name: Set RustDesk download paths
+  ansible.builtin.set_fact:
+    rustdesk_rpm_filename: "rustdesk-{{ rustdesk_resolved_version }}-0.{{ rustdesk_rpm_arch }}.rpm"
+    rustdesk_rpm_path: "/tmp/rustdesk-{{ rustdesk_resolved_version }}-0.{{ rustdesk_rpm_arch }}.rpm"
+    rustdesk_rpm_url: "https://github.com/rustdesk/rustdesk/releases/download/{{ rustdesk_resolved_version }}/rustdesk-{{ rustdesk_resolved_version }}-0.{{ rustdesk_rpm_arch }}.rpm"
+
+- name: Download RustDesk RPM
+  ansible.builtin.get_url:
+    url: "{{ rustdesk_rpm_url }}"
+    dest: "{{ rustdesk_rpm_path }}"
+    mode: "0644"
+
+- name: Install RustDesk from RPM
+  ansible.builtin.dnf:
+    name: "{{ rustdesk_rpm_path }}"
+    state: present
+    disable_gpg_check: true
+  become: true
+
+- name: Remove RustDesk RPM after install
+  ansible.builtin.file:
+    path: "{{ rustdesk_rpm_path }}"
+    state: absent
+
+- name: Discover RustDesk systemd unit
+  ansible.builtin.shell: |
+    if systemctl list-unit-files rustdesk.service --no-legend --no-pager 2>/dev/null | grep -q rustdesk.service; then
+      echo rustdesk.service
+    else
+      systemctl list-unit-files --no-pager --no-legend | awk '/rust/ {print $1; exit}'
+    fi
+  register: rustdesk_service_name
+  changed_when: false
+
+- name: Enable and start RustDesk service
+  ansible.builtin.systemd:
+    name: "{{ rustdesk_service_name.stdout }}"
+    enabled: true
+    state: started
+  become: true
+  when: rustdesk_service_name.stdout | length > 0
+
+- name: Check if firewalld is active
+  ansible.builtin.command: systemctl is-active firewalld
+  register: firewalld_active
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: Check if rustdesk firewalld service exists
+  ansible.builtin.command: firewall-cmd --info-service=rustdesk
+  register: rustdesk_firewall_service
+  changed_when: false
+  failed_when: false
+  become: true
+  when: firewalld_active.stdout == 'active'
+
+- name: Allow RustDesk through firewalld
+  ansible.builtin.command: firewall-cmd --permanent --add-service=rustdesk
+  become: true
+  when:
+    - firewalld_active.stdout == 'active'
+    - rustdesk_firewall_service.rc == 0
+  register: rustdesk_firewall_add
+  changed_when: rustdesk_firewall_add.rc == 0
+
+- name: Reload firewalld after RustDesk rule
+  ansible.builtin.command: firewall-cmd --reload
+  become: true
+  when:
+    - firewalld_active.stdout == 'active'
+    - rustdesk_firewall_add is changed
+
+- name: Ensure SSH stays enabled
+  ansible.builtin.systemd:
+    name: sshd
+    enabled: true
+    state: started
+  become: true

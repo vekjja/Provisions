@@ -2,11 +2,11 @@
 
 [local]
 macbook ansible_connection=local
-GameBox ansible_connection=local
 
 [remote]
 dev-node-0
 mini-cloud
+GameBox
 
 #[windows]
 #winhost ansible_port=5985 ansible_connection=winrm ansible_winrm_transport=ntlm ansible_winrm_server_cert_validation=ignore ansible_python_interpreter=C:\Python313\python.exe

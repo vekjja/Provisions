@@ -66,6 +66,26 @@ Enables magic-packet Wake-on-LAN on the host's default network interface and per
 wakeonlan: true
 ```
 
+### 🖥️ `rustdesk` (RustDesk remote desktop)
+
+Used by: `roles/packages/tasks/rustdesk.yml` (via `roles/packages/tasks/redhat.yml`)  
+Applies to: Fedora/RedHat only (when `rustdesk: true`)
+
+Downloads the official RustDesk RPM from GitHub releases, installs it with `dnf`, enables the RustDesk systemd service, opens the `rustdesk` firewalld service when available, and ensures `sshd` stays enabled.
+
+```yaml
+# playbooks/host_vars/GameBox.yml
+rustdesk: true
+
+# Optional: pin a specific release instead of fetching latest
+rustdesk_version: "1.4.9"
+```
+
+Notes:
+- Supports `x86_64` and `aarch64`.
+- If `rustdesk.service` is not found, the role discovers a matching unit via `systemctl list-unit-files | grep -i rust`.
+- If firewalld has no predefined `rustdesk` service, the install still succeeds; RustDesk may work on trusted networks without an explicit firewall rule.
+
 ### 🖥️ `appimages` (AppImage desktop shortcuts)
 
 Used by: `roles/packages/tasks/appimages.yml` (via `roles/packages/tasks/redhat.yml`)  
