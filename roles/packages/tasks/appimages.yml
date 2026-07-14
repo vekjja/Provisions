@@ -6,7 +6,7 @@
       - fuse3
       - fuse3-libs
     state: present
-  become: "{{ use_sudo }}"
+  become: true
 
 - name: Check AppImages directory exists
   ansible.builtin.stat:
@@ -27,11 +27,11 @@
   ansible.builtin.script: >-
     install-appimage-desktop.sh
     {{ item.path | quote }}
-    {{ lookup('env', 'HOME') | quote }}
+    {{ ansible_facts['env']['HOME'] | quote }}
   loop: "{{ appimage_files.files | default([]) | sort(attribute='path') }}"
   when: appimage_files.matched | default(0) > 0
 
 - name: Update desktop database
-  ansible.builtin.command: update-desktop-database "{{ lookup('env', 'HOME') }}/.local/share/applications"
+  ansible.builtin.command: update-desktop-database "{{ ansible_facts['env']['HOME'] }}/.local/share/applications"
   changed_when: false
   when: appimage_files.matched | default(0) > 0

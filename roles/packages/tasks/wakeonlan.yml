@@ -2,11 +2,11 @@
   ansible.builtin.package:
     name: ethtool
     state: present
-  become: "{{ use_sudo }}"
+  become: true
 
 - name: Enable Wake-on-LAN on default interface
   ansible.builtin.command: ethtool -s "{{ ansible_facts['default_ipv4']['interface'] }}" wol g
-  become: "{{ use_sudo }}"
+  become: true
   when: ansible_facts['default_ipv4']['interface'] is defined
   changed_when: true
 
@@ -19,4 +19,4 @@
       if [ "$2" = "up" ]; then
         ethtool -s "$1" wol g
       fi
-  become: "{{ use_sudo }}"
+  become: true
