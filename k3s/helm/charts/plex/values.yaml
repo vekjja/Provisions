@@ -72,18 +72,17 @@ httpRoute:
 
 persistence:
   movies:
+    mountPath: /data/Movies
     storageClass: "local-storage"
     size: 100Gi
     accessMode: ReadWriteMany
   series:
-    storageClass: "local-storage"
-    size: 100Gi
-    accessMode: ReadWriteMany
-  seriesExt:
+    mountPath: /data/Series
     storageClass: "local-storage"
     size: 100Gi
     accessMode: ReadWriteMany
   config:
+    mountPath: /config
     storageClass: "local-storage"
     size: 3Gi
     accessMode: ReadWriteMany

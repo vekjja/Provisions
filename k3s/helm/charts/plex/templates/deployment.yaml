@@ -64,27 +64,20 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
           volumeMounts:
-            - name: plex-movies
-              mountPath: /data/Movies
-            - name: plex-series
-              mountPath: /data/Series
-            - name: plex-series-ext
-              mountPath: /data/SeriesExt
-            - name: plex-config
-              mountPath: /config
+            {{- range $key, $vol := .Values.persistence }}
+            {{- if ne ($vol.enabled | default true) false }}
+            - name: {{ include "plex.persistenceVolumeName" $key }}
+              mountPath: {{ $vol.mountPath | quote }}
+            {{- end }}
+            {{- end }}
       volumes:
-      - name: plex-movies
-        persistentVolumeClaim:
-          claimName: "{{- template "plex.fullname" . }}-movies"
-      - name: plex-series
-        persistentVolumeClaim:
-          claimName: "{{- template "plex.fullname" . }}-series"
-      - name: plex-config
-        persistentVolumeClaim:
-          claimName: "{{- template "plex.fullname" . }}-config"
-      - name: plex-series-ext
-        persistentVolumeClaim:
-          claimName: "{{- template "plex.fullname" . }}-series-ext"
+        {{- range $key, $vol := .Values.persistence }}
+        {{- if ne ($vol.enabled | default true) false }}
+        - name: {{ include "plex.persistenceVolumeName" $key }}
+          persistentVolumeClaim:
+            claimName: {{ include "plex.persistenceClaimName" (dict "root" $ "key" $key) }}
+        {{- end }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

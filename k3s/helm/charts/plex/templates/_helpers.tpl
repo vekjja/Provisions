@@ -60,3 +60,17 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Volume name for a persistence entry key (e.g. seriesExt -> plex-series-ext).
+*/}}
+{{- define "plex.persistenceVolumeName" -}}
+{{- printf "plex-%s" (. | kebabcase) -}}
+{{- end }}
+
+{{/*
+PVC name for a persistence entry key (e.g. seriesExt -> release-plex-series-ext).
+*/}}
+{{- define "plex.persistenceClaimName" -}}
+{{- printf "%s-%s" (include "plex.fullname" .root) (.key | kebabcase) -}}
+{{- end }}
