@@ -1,6 +1,7 @@
 hostname: GameBox
 
 packages:
+  - awscli2
   - cifs-utils
   - gparted
   - helm
