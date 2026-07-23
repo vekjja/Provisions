@@ -12,7 +12,7 @@ k3s_tuning:
 
   # inotify limits (host kernel). These are frequently the real bottleneck for per-pod log file watching.
   inotify_max_user_watches: 1048576
-  inotify_max_user_instances: 8192
+  inotify_max_user_instances: 32768
   inotify_max_queued_events: 32768
 
   # System-wide max open files.

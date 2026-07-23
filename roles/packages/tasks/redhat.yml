@@ -30,6 +30,10 @@
   ansible.builtin.include_tasks: wakeonlan.yml
   when: wakeonlan | default(false)
 
+- name: Include OpenRazer tasks
+  ansible.builtin.include_tasks: openrazer.yml
+  when: openrazer | default(false)
+
 - name: Install Fedora Workstation Repositories
   ansible.builtin.package:
     name: fedora-workstation-repositories
