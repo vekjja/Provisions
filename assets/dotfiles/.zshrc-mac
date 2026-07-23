@@ -28,7 +28,14 @@ alias du="gdu-go"
 alias flush_dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 alias showHidden="defaults write com.apple.finder AppleShowAllFiles YES"
 alias macInfo="system_profiler SPSoftwareDataType SPHardwareDataType"
-alias clearCache="sudo rm -rf ~/Library/Caches/* && sudo rm -rf /Library/Caches/* &&sudo rm -rf /private/var/log/*i && sudo rm -fr /private/var/folders/zz"
+
+function clearCache() {
+    sudo rm -rf ~/Library/Caches/*
+    sudo rm -rf /Library/Caches/*
+    sudo rm -rf /private/var/log/*
+    sudo rm -fr /private/var/folders/zz
+}
+
 function copy() {
   cat "$@" | pbcopy
 }
