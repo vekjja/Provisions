@@ -10,7 +10,7 @@ packages:
 
 k9s: true
 kubectl: true
-rustdesk: true
+rustdesk: false
 wakeonlan: true
 googleChrome: true
 appimages: /mnt/ssd/X/Applications

@@ -28,7 +28,7 @@ txtOwnerId: mini-cloud
 txtPrefix: externaldns
 
 extraArgs:
-- --default-targets=174.44.105.230
+- --default-targets=174.44.103.42
 - --force-default-targets
 # Public WAN IP for all managed DNS records. Do not duplicate on Gateway/HTTPRoute annotations.
 

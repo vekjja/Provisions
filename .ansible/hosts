@@ -1,6 +1,7 @@
 # Inventory File for Ansible
 
 [local]
+GameBox ansible_connection=local
 macbook ansible_connection=local
 
 [remote]
