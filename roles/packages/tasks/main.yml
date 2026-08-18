@@ -4,7 +4,18 @@
     update_cache: true
     state: present
   become: true
-  when: unix_packages is defined
+  when:
+    - unix_packages is defined
+    - ansible_facts['os_family'] != 'Darwin'
+
+- name: Install Common Packages (macOS)
+  ansible.builtin.homebrew:
+    name: "{{ unix_packages }}"
+    update_homebrew: true
+    state: present
+  when:
+    - unix_packages is defined
+    - ansible_facts['os_family'] == 'Darwin'
 
 - name: Install Selected Packages (Mac/Linux)
   ansible.builtin.package:
@@ -12,7 +23,18 @@
     update_cache: true
     state: present
   become: true
-  when: packages is defined
+  when:
+    - packages is defined
+    - ansible_facts['os_family'] != 'Darwin'
+
+- name: Install Selected Packages (macOS)
+  ansible.builtin.homebrew:
+    name: "{{ packages | default([]) }}"
+    update_homebrew: true
+    state: present
+  when:
+    - packages is defined
+    - ansible_facts['os_family'] == 'Darwin'
 
 - name: Include Fedora/RedHat Tasks
   ansible.builtin.include_tasks: redhat.yml

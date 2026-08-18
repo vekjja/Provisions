@@ -14,7 +14,7 @@ casks:
   - aptakube
   - beekeeper-studio
   - cursor
-  - google-chrome
+  # - google-chrome
   - iterm2
   - spotify
   - visual-studio-code
