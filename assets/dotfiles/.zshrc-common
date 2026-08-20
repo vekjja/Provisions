@@ -292,6 +292,11 @@ export DOCKER_BUILDKIT=1
 alias d="docker"
 alias dc="docker-compose"
 
+# Docker CLI Completion
+fpath=(/Users/kevinjayne/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+
 #### Encryption ####
 function enc() {
   openssl des -in ${1} -out ${1}.enc

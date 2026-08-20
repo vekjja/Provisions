@@ -10,6 +10,9 @@ export GOROOT="$(brew --prefix golang)/libexec"
 # Postgres
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 
+# GCloud
+export PATH="/opt/homebrew/share/google-cloud-sdk/bin:$PATH"
+
 #### iTerm ####
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -180,3 +183,4 @@ clean_apple_moving_wallpapers() {
 
   echo "Done. If the UI still shows moving sets, that's expected—selecting them will re-download assets."
 }
+
