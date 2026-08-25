@@ -236,7 +236,10 @@ alias alpine-docker="docker run -it --rm --name alpine-box ghcr.io/vekjja/alpine
 # Run an ephemeral alpine toolbox pod. Supports either:
 # - alpine-k8s sh -c 'echo hi'
 # - alpine-k8s 'echo hi'          (runs via sh -lc inside the pod)
-# Run an ephemeral alpine toolbox pod.
+# Requests and limits are set explicitly: GKE Autopilot defaults anything left
+# unspecified (and warns about it), and namespaces with a ResourceQuota that
+# enforces limits.cpu / limits.memory reject the pod outright. 250m / 512Mi is
+# the Autopilot general-purpose minimum; override via ALPINE_K8S_CPU / _MEM.
 function alpine-k8s() {
   local cmd=("$@")
 
@@ -245,12 +248,27 @@ function alpine-k8s() {
     cmd=("zsh")
   fi
 
+  local image="${ALPINE_K8S_IMAGE:-ghcr.io/vekjja/alpine-box:main}"
+  local cpu="${ALPINE_K8S_CPU:-250m}"
+  local mem="${ALPINE_K8S_MEM:-512Mi}"
+
+  # --overrides is applied as a JSON merge patch, so it replaces spec.containers
+  # wholesale — the container has to be described in full here, not just its
+  # resources (stdin/tty included, since -it no longer sets them for us).
+  local overrides
+  overrides=$(jq -n -c \
+    --arg image "$image" --arg cpu "$cpu" --arg mem "$mem" \
+    --argjson cmd "$(jq -n -c --args '$ARGS.positional' -- "${cmd[@]}")" \
+    '{spec:{containers:[{name:"alpine-box",image:$image,imagePullPolicy:"Always",
+       command:$cmd,stdin:true,stdinOnce:true,tty:true,
+       resources:{requests:{cpu:$cpu,memory:$mem},limits:{cpu:$cpu,memory:$mem}}}]}}') || return 1
+
   kubectl run alpine-box \
-    --image=ghcr.io/vekjja/alpine-box:main \
+    --image="$image" \
     --restart=Never \
     --image-pull-policy=Always \
     -it --rm \
-    --command -- "${cmd[@]}"
+    --overrides="$overrides"
 }
 
 # Deploys the alpine-box helm chart directly from the remote git repository.
