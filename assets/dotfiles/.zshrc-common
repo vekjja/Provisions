@@ -6,6 +6,8 @@ export PATH="$PATH:/bin:/sbin"
 export PATH="$PATH:/usr/bin:/usr/sbin"
 export PATH="$PATH:/usr/local/bin:/usr/local/sbin"
 export PATH="$PATH:$HOME/.local/bin"
+# postgres client only (keg-only libpq) -- no local server to squat on :5432
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 # Terminal Colors
 export PURP='\033[0;35m'
@@ -302,6 +304,109 @@ function alpine-helm() {
     # example http route overrides:
     # alpine-helm --set httpRoute.enabled=true
     # alpine-helm --set httpRoute.enabled=true --set 'httpRoute.hostnames[0]=alpine.livingroom.cloud'
+}
+
+
+function monstro-psql() {
+kubectl run alpine-psql -it --rm --restart=Never --image=ghcr.io/vekjja/alpine-box:main --overrides='{"spec":{"containers":[{"name":"alpine-psql","image":"ghcr.io/vekjja/alpine-box:main","command":["sh","-c","psql \"postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=$POSTGRES_SSLMODE\""],"stdin":true,"stdinOnce":true,"tty":true,"envFrom":[{"configMapRef":{"name":"crud"}},{"secretRef":{"name":"monstro-db-secrets"}}],"resources":{"requests":{"cpu":"250m","memory":"512Mi","ephemeral-storage":"1Gi"},"limits":{"cpu":"250m","memory":"512Mi","ephemeral-storage":"1Gi"}}}]}}'
+}
+
+
+# Tunnel the preview-env Postgres to localhost for GUI clients (Beekeeper Studio).
+# Every govern preview points POSTGRES_HOST at pgbouncer.preview-deps:5432, which
+# wildcard-routes each pr_<N> database to Govern dev Cloud SQL via its Auth Proxy
+# sidecar. One tunnel therefore serves every preview env at once -- just switch
+# database in the GUI. Usage: monstro-db-forward [PR#] [local-port]
+function monstro-db-forward() {
+  local pr="${1:-}" port="${2:-5432}" pw
+  pw="$(kubectl -n preview-deps get secret monstro-db-secrets -o jsonpath='{.data.POSTGRES_PASSWORD}' | base64 -d)" || return 1
+  echo "host 127.0.0.1   port $port   user monstro_app   sslmode disable"
+  echo "password: $pw"
+  if [[ -n "$pr" ]]; then
+    print -rn -- "postgresql://monstro_app:${pw}@127.0.0.1:${port}/pr_${pr}?sslmode=disable" | pbcopy
+    echo "📋 connection URL for pr_${pr} copied to clipboard"
+  else
+    echo "database: monstro (shared dev) or pr_<PR#>   -- monstro-db-list shows what exists"
+  fi
+  # Auto-reconnect: the Connect Gateway hop idles out and pgbouncer pods rotate,
+  # either of which silently ends a plain port-forward mid-session. Silence here
+  # means the tunnel is healthy -- kubectl only speaks up when a client connects.
+  local stop=0
+  setopt localtraps
+  trap 'stop=1' INT
+  while (( ! stop )); do
+    kubectl -n preview-deps port-forward svc/pgbouncer "${port}:5432"
+    (( stop )) && break
+    echo "\u21bb tunnel dropped -- reconnecting in 2s (Ctrl-C to stop)"
+    sleep 2
+  done
+  echo "tunnel closed"
+}
+
+
+# List the databases actually reachable through that pooler. Runs a throwaway
+# in-cluster pod, so it needs no local psql. A pr_<N> database exists only after
+# that PR's preview-db bootstrap job has run -- if it is missing here, the
+# preview env never got a database and no client can connect to it.
+function monstro-db-list() {
+  local p="pgls-$$" ph=""
+  kubectl run "$p" -n preview-deps --restart=Never --image=postgres:16-alpine --command \
+    --overrides='{"spec":{"containers":[{"name":"c","image":"postgres:16-alpine","command":["sh","-c","psql -h pgbouncer -U monstro_app -d monstro -At -c \"select datname from pg_database where not datistemplate order by datname\""],"env":[{"name":"PGPASSWORD","valueFrom":{"secretKeyRef":{"name":"monstro-db-secrets","key":"POSTGRES_PASSWORD"}}}],"resources":{"requests":{"cpu":"100m","memory":"256Mi","ephemeral-storage":"1Gi"},"limits":{"cpu":"100m","memory":"256Mi","ephemeral-storage":"1Gi"}}}]}}' >/dev/null 2>&1 || return 1
+  for _ in {1..30}; do
+    ph="$(kubectl get pod "$p" -n preview-deps -o jsonpath='{.status.phase}' 2>/dev/null)"
+    [[ "$ph" == "Succeeded" || "$ph" == "Failed" ]] && break
+    sleep 3
+  done
+  kubectl logs "$p" -n preview-deps -c c 2>&1
+  kubectl delete pod "$p" -n preview-deps --wait=false >/dev/null 2>&1
+}
+
+
+# One-shot psql against a preview or dev database: opens its own tunnel on a
+# non-default port (so it never fights a GUI tunnel on 5432), runs psql, tears
+# the tunnel down on exit. Accepts a bare PR number or a literal database name;
+# extra args pass through to psql. Examples:
+#   monstro-db-psql 1276
+#   monstro-db-psql monstro -c 'select count(*) from documents'
+# Override the local port with MONSTRO_DB_PORT if 15432 is taken.
+function monstro-db-psql() {
+  local db="monstro" port="${MONSTRO_DB_PORT:-15432}" pw pid
+  if [[ -n "$1" && "$1" != -* ]]; then db="$1"; shift; fi
+  [[ "$db" == <-> ]] && db="pr_${db}"
+  pw="$(kubectl -n preview-deps get secret monstro-db-secrets -o jsonpath='{.data.POSTGRES_PASSWORD}' | base64 -d)" || return 1
+  kubectl -n preview-deps port-forward svc/pgbouncer "${port}:5432" >/dev/null 2>&1 &
+  pid=$!
+  { sleep 3
+    PGPASSWORD="$pw" psql "postgresql://monstro_app@127.0.0.1:${port}/${db}?sslmode=disable" "$@"
+  } always { kill "$pid" 2>/dev/null }
+}
+
+
+# Forward straight to the cloud-sql-proxy sidecar (port 5433) inside the
+# pgbouncer pod, bypassing pgbouncer itself. The proxy runs --auto-iam-authn, so
+# it authenticates as govern-sa with NO password and hands back a real session-
+# mode connection: temp tables, LISTEN and session SET all work, unlike
+# pgbouncer's transaction pooling. Best target for a GUI client. Costs a direct
+# Cloud SQL connection per client, so it is for hands-on use, not services.
+# Re-resolves the pod on every reconnect, since a pod-pinned forward dies when
+# the pod rotates. Usage: monstro-db-direct [PR#|dbname] [local-port]
+function monstro-db-direct() {
+  local db="${1:-monstro}" port="${2:-5433}" pod stop=0
+  [[ "$db" == <-> ]] && db="pr_${db}"
+  print -rn -- "postgresql://govern-sa%40monstro-govern-dev.iam@127.0.0.1:${port}/${db}?sslmode=disable" | pbcopy
+  echo "host 127.0.0.1   port ${port}   user govern-sa@monstro-govern-dev.iam   password (leave blank)   db ${db}"
+  echo "📋 URL copied -- direct Cloud SQL proxy, session mode (no pgbouncer)"
+  setopt localtraps
+  trap 'stop=1' INT
+  while (( ! stop )); do
+    pod="$(kubectl get pod -n preview-deps -l app=pgbouncer -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)"
+    if [[ -z "$pod" ]]; then echo "no pgbouncer pod found in preview-deps"; return 1; fi
+    kubectl -n preview-deps port-forward "pod/${pod}" "${port}:5433"
+    (( stop )) && break
+    echo "↻ tunnel dropped -- re-resolving pod, reconnecting in 2s (Ctrl-C to stop)"
+    sleep 2
+  done
+  echo "tunnel closed"
 }
 
 
