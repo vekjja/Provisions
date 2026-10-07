@@ -183,4 +183,3 @@ clean_apple_moving_wallpapers() {
 
   echo "Done. If the UI still shows moving sets, that's expected—selecting them will re-download assets."
 }
-
