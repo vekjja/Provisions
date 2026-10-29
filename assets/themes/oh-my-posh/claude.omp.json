@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "palette": {
+    "blue": "#00b3ff",
+    "gray": "#424242",
+    "pink": "#e7357c",
+    "green": "#35e7b7",
+    "yellow": "#ffaf00",
+    "magenta": "#ff00ff"
+  },
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "claude",
+          "style": "diamond",
+          "leading_diamond": "",
+          "trailing_diamond": "",
+          "foreground": "#FFFFFF",
+          "background": "p:magenta",
+          "template": " 󰯉 {{ .Model.DisplayName }}{{ if .Effort }}{{ if .Effort.Level }} · {{ .Effort.Level }}{{ end }}{{ end }} "
+        },
+        {
+          "type": "claude",
+          "style": "diamond",
+          "leading_diamond": "<transparent,background></>",
+          "trailing_diamond": "",
+          "foreground": "#000000",
+          "background": "p:blue",
+          "template": "  {{ .TokenGaugeUsed }} {{ .TokenUsagePercent.String }}% "
+        },
+        {
+          "type": "claude",
+          "style": "diamond",
+          "leading_diamond": "<transparent,background></>",
+          "trailing_diamond": "",
+          "foreground": "#000000",
+          "background": "p:yellow",
+          "template": "{{ if .FiveHourResetsIn }}  5h {{ .FiveHourGauge }} {{ .FiveHourUsage.String }}% {{ end }}"
+        },
+        {
+          "type": "claude",
+          "style": "diamond",
+          "leading_diamond": "<transparent,background></>",
+          "trailing_diamond": "",
+          "foreground": "#000000",
+          "background": "p:green",
+          "template": "{{ if or .Cost.TotalLinesAdded .Cost.TotalLinesRemoved }}  +{{ .Cost.TotalLinesAdded }} -{{ .Cost.TotalLinesRemoved }} {{ end }}"
+        },
+        {
+          "type": "claude",
+          "style": "diamond",
+          "leading_diamond": "<transparent,background></>",
+          "trailing_diamond": "",
+          "foreground": "#FFFFFF",
+          "background": "p:pink",
+          "template": "{{ if .PR }}{{ if .PR.Number }}  #{{ .PR.Number }}{{ if .PR.ReviewState }} {{ .PR.ReviewState }}{{ end }} {{ end }}{{ end }}"
+        },
+        {
+          "type": "claude",
+          "style": "diamond",
+          "leading_diamond": "<transparent,background></>",
+          "trailing_diamond": "",
+          "foreground": "#f2f3f8",
+          "background": "p:gray",
+          "template": "  {{ .FormattedCost }}  {{ .FormattedDuration }} "
+        }
+      ]
+    }
+  ],
+  "version": 4,
+  "final_space": true
+}

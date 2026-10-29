@@ -8,6 +8,7 @@ files:
     - { src: 'dotfiles/.zshrc-common', dest: '~/.zshrc-common' }
     - { src: 'configs/ssh.config', dest: '~/.ssh/config' }
     - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
+    - { src: 'themes/oh-my-posh/claude.omp.json', dest: '~/.config/ohmyposh/claude.omp.json' }
     - { src: 'themes/vekjja', dest: '~/.cursor/extensions/vekjja.vekjja-theme-1.0.0' }
 
 casks:
