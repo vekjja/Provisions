@@ -14,9 +14,21 @@
       "alignment": "left",
       "segments": [
         {
-          "type": "claude",
+          "type": "time",
           "style": "diamond",
           "leading_diamond": "",
+          "trailing_diamond": "",
+          "foreground": "#f2f3f8",
+          "background": "p:gray",
+          "template": "  {{ .CurrentDate | date .Format }} ",
+          "options": {
+            "time_format": "3:04 PM"
+          }
+        },
+        {
+          "type": "claude",
+          "style": "diamond",
+          "leading_diamond": "<transparent,background></>",
           "trailing_diamond": "",
           "foreground": "#FFFFFF",
           "background": "p:magenta",
