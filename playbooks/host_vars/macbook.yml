@@ -9,6 +9,7 @@ files:
     - { src: 'configs/ssh.config', dest: '~/.ssh/config' }
     - { src: 'themes/oh-my-posh/kev.omp.json', dest: '~/.kev.omp.json' }
     - { src: 'themes/oh-my-posh/claude.omp.json', dest: '~/.config/ohmyposh/claude.omp.json' }
+    - { src: 'configs/k9s/views.yaml', dest: '~/Library/Application Support/k9s/views.yaml' }
     - { src: 'themes/vekjja', dest: '~/.cursor/extensions/vekjja.vekjja-theme-1.0.0' }
 
 casks:
