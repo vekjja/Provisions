@@ -315,7 +315,7 @@ wireguard:
   server_endpoint: livingroom.cloud  # required for client configs
   interfaces:
     - name: wg0
-      address: 10.0.10.0/24
+      address: 10.0.10.1/24
       # Optional: private_key (if omitted, generated on host)
       peers:
         - name: workMac
