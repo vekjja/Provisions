@@ -26,10 +26,6 @@
   become: true
   when: k9s | default(false)
 
-- name: Include Wake-on-LAN tasks
-  ansible.builtin.include_tasks: wakeonlan.yml
-  when: wakeonlan | default(false)
-
 - name: Include OpenRazer tasks
   ansible.builtin.include_tasks: openrazer.yml
   when: openrazer | default(false)
@@ -47,7 +43,6 @@
   become: true
   when: googleChrome | default(false)
 
-
 - name: Install Google Chrome
   ansible.builtin.package:
     name: google-chrome-stable
@@ -59,7 +54,3 @@
 - name: Include AppImage desktop entry tasks
   ansible.builtin.include_tasks: appimages.yml
   when: appimages is defined
-
-- name: Include RustDesk tasks
-  ansible.builtin.include_tasks: rustdesk.yml
-  when: rustdesk | default(false)

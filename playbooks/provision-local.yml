@@ -4,6 +4,7 @@
   
   roles:
     - { role: packages, tags: ['packages', 'casks'] }
+    - { role: wakeonlan, tags: ['wakeonlan', 'network'] }
     - { role: nerd-fonts, tags: ['nerd-fonts'] }
     - { role: shell, tags: ['shell'] }
     - { role: files, tags: ['files'] }

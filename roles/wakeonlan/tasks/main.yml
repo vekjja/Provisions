@@ -1,0 +1,11 @@
+- name: RedHat Tasks
+  ansible.builtin.include_tasks: redhat.yml
+  when: ansible_facts['os_family'] == 'RedHat' and wakeonlan | default(false)
+
+- name: Debian Tasks
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_facts['os_family'] == 'Debian' and wakeonlan | default(false)
+
+- name: Darwin Tasks
+  ansible.builtin.include_tasks: darwin.yml
+  when: ansible_facts['os_family'] == 'Darwin' and wakeonlan | default(false)

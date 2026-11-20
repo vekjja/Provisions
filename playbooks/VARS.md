@@ -72,35 +72,15 @@ openrazer: true
 
 ### 📡 `wakeonlan` (Wake-on-LAN)
 
-Used by: `roles/packages/tasks/wakeonlan.yml` (via `roles/packages/tasks/redhat.yml`)  
-Applies to: Fedora/RedHat only (when `wakeonlan: true`)
+Used by: `roles/wakeonlan`  
+Applies to: Fedora/RedHat when `wakeonlan: true`. Debian and macOS task files are stubs.
 
-Enables magic-packet Wake-on-LAN on the host's default network interface and persists it across reboots via a NetworkManager dispatcher script. Also requires WoL enabled in BIOS/UEFI.
+Enables magic-packet Wake-on-LAN on the host's default network interface and persists it across interface up events with a NetworkManager dispatcher script. Also requires WoL enabled in BIOS/UEFI.
 
 ```yaml
 # playbooks/host_vars/GameBox.yml
 wakeonlan: true
 ```
-
-### 🖥️ `rustdesk` (RustDesk remote desktop)
-
-Used by: `roles/packages/tasks/rustdesk.yml` (via `roles/packages/tasks/redhat.yml`)  
-Applies to: Fedora/RedHat only (when `rustdesk: true`)
-
-Downloads the official RustDesk RPM from GitHub releases, installs it with `dnf`, enables the RustDesk systemd service, opens the `rustdesk` firewalld service when available, and ensures `sshd` stays enabled.
-
-```yaml
-# playbooks/host_vars/GameBox.yml
-rustdesk: true
-
-# Optional: pin a specific release instead of fetching latest
-rustdesk_version: "1.4.9"
-```
-
-Notes:
-- Supports `x86_64` and `aarch64`.
-- If `rustdesk.service` is not found, the role discovers a matching unit via `systemctl list-unit-files | grep -i rust`.
-- If firewalld has no predefined `rustdesk` service, the install still succeeds; RustDesk may work on trusted networks without an explicit firewall rule.
 
 ### 🖥️ `appimages` (AppImage desktop shortcuts)
 

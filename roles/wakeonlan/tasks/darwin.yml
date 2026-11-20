@@ -1,0 +1,3 @@
+- name: Wake-on-LAN on macOS is not implemented
+  ansible.builtin.debug:
+    msg: "wakeonlan role stub: macOS support is not implemented"

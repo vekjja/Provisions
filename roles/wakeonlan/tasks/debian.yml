@@ -1,0 +1,3 @@
+- name: Wake-on-LAN on Debian is not implemented
+  ansible.builtin.debug:
+    msg: "wakeonlan role stub: Debian support is not implemented"

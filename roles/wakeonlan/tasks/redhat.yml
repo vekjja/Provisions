@@ -4,11 +4,19 @@
     state: present
   become: true
 
+- name: Read Wake-on-LAN status
+  ansible.builtin.command: ethtool "{{ ansible_facts['default_ipv4']['interface'] }}"
+  register: wol_status
+  changed_when: false
+  become: true
+  when: ansible_facts['default_ipv4']['interface'] is defined
+
 - name: Enable Wake-on-LAN on default interface
   ansible.builtin.command: ethtool -s "{{ ansible_facts['default_ipv4']['interface'] }}" wol g
   become: true
-  when: ansible_facts['default_ipv4']['interface'] is defined
-  changed_when: true
+  when:
+    - ansible_facts['default_ipv4']['interface'] is defined
+    - "wol_status.stdout | default('') is not search('Wake-on: g')"
 
 - name: Persist Wake-on-LAN across interface up events
   ansible.builtin.copy:
