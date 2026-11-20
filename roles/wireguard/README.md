@@ -96,6 +96,13 @@ Client keys are automatically generated for each peer. The role:
 
 Just copy the client config file to the client device and import it into WireGuard!
 
+The role also packs the client configs into one tar and fetches it back to the machine running Ansible:
+
+- `~/.wireguard/<inventory-hostname>-clients.tar`
+- Override the directory with `wireguard.client_config_dir`
+- The archive is mode `0600` and contains `<interface>_<peer>.conf` files
+- Fetch only: `ansible-playbook playbooks/provision.yml --limit mini-cloud --tags get-client-configs`
+
 ## Usage
 
 Add the role to your playbook:

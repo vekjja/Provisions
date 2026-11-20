@@ -308,6 +308,7 @@ Exact behavior:
 - Generates per-peer keys under `/etc/wireguard/clients/`
 - Renders `/etc/wireguard/<iface>.conf` and `wg-quick@<iface>` services
 - Writes client configs to `/etc/wireguard/clients/<iface>_<peer>.conf`
+- Archives those client configs into one tar and fetches it to `~/.wireguard/<inventory_hostname>-clients.tar` (mode `0600`). Override the directory with `wireguard.client_config_dir`. The `get-client-configs` tag runs the fetch.
 
 Dependencies/interaction:
 - For NAT, WireGuard uses **`static_ip.interface`** if present; otherwise it auto-detects the default route interface.
