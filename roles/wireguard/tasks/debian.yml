@@ -205,6 +205,7 @@
   loop_control:
     label: "{{ item.name }}"
   vars:
+    wg_private_key_map: "{{ wireguard_private_key_map | default({}) }}"
     wg_client_public_key_map: "{{ wireguard_client_public_key_map | default({}) }}"
     wg_nat_interface: "{{ static_ip.interface | default(wireguard_default_interface.stdout | default('eth0')) }}"
 
@@ -306,16 +307,68 @@
   loop: "{{ wireguard_config.interfaces | default([]) }}"
   loop_control:
     label: "{{ item.name }}"
-  register: wireguard_service_start
-  failed_when: false
 
-- name: Show WireGuard service status on failure
+- name: Set WireGuard client archive locations
+  ansible.builtin.set_fact:
+    wireguard_client_config_dir: "{{ wireguard.client_config_dir | default(lookup('env', 'HOME') ~ '/.wireguard') }}"
+    wireguard_client_archive_src: "/tmp/wireguard-{{ inventory_hostname }}-clients.tar"
+    wireguard_client_config_paths: []
   when:
-    - wireguard_service_start is defined
-    - wireguard_service_start.results | selectattr('failed', 'equalto', true) | list | length > 0
-    - item.failed | default(false)
-  ansible.builtin.debug:
-    msg: "WireGuard {{ item.item.name }} failed. See /etc/wireguard/{{ item.item.name }}.conf and run: systemctl status wg-quick@{{ item.item.name }}.service"
-  loop: "{{ wireguard_service_start.results | default([]) }}"
-  loop_control:
-    label: "{{ item.item.name }}"
+    - wireguard.interfaces is defined
+    - wireguard.server_endpoint is defined
+  tags: get-client-configs
+
+- name: Collect WireGuard client config paths
+  ansible.builtin.set_fact:
+    wireguard_client_config_paths: "{{ wireguard_client_config_paths + ['/etc/wireguard/clients/' ~ item.0.name ~ '_' ~ item.1.name ~ '.conf'] }}"
+  with_subelements:
+    - "{{ wireguard.interfaces }}"
+    - peers
+  when:
+    - wireguard.interfaces is defined
+    - wireguard.server_endpoint is defined
+  tags: get-client-configs
+
+- name: Archive WireGuard client configs
+  ansible.builtin.archive:
+    path: "{{ wireguard_client_config_paths }}"
+    dest: "{{ wireguard_client_archive_src }}"
+    format: tar
+    mode: "0600"
+  become: true
+  when:
+    - wireguard.interfaces is defined
+    - wireguard.server_endpoint is defined
+  tags: get-client-configs
+
+- name: Fetch WireGuard client config archive
+  ansible.builtin.fetch:
+    src: "{{ wireguard_client_archive_src }}"
+    dest: "{{ wireguard_client_config_dir }}/{{ inventory_hostname }}-clients.tar"
+    flat: true
+  become: true
+  when:
+    - wireguard.interfaces is defined
+    - wireguard.server_endpoint is defined
+  tags: get-client-configs
+
+- name: Restrict fetched WireGuard client archive permissions
+  ansible.builtin.file:
+    path: "{{ wireguard_client_config_dir }}/{{ inventory_hostname }}-clients.tar"
+    mode: "0600"
+  delegate_to: localhost
+  become: false
+  when:
+    - wireguard.interfaces is defined
+    - wireguard.server_endpoint is defined
+  tags: get-client-configs
+
+- name: Remove remote WireGuard client archive
+  ansible.builtin.file:
+    path: "{{ wireguard_client_archive_src }}"
+    state: absent
+  become: true
+  when:
+    - wireguard.interfaces is defined
+    - wireguard.server_endpoint is defined
+  tags: get-client-configs

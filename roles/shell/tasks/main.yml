@@ -1,4 +1,5 @@
 - name: Create Unix Directories
+
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -27,6 +28,13 @@
   ansible.builtin.package:
     name: unzip
     state: present
+  when: ansible_facts['os_family'] != 'Darwin'
+
+- name: Ensure unzip is installed (Required for Oh My Posh) (macOS)
+  ansible.builtin.homebrew:
+    name: unzip
+    state: present
+  when: ansible_facts['os_family'] == 'Darwin'
 
 - name: Ensure ~/.local/bin exists (Oh My Posh install target)
   ansible.builtin.file:

@@ -14,6 +14,9 @@ fi
 export GOROOT=/usr/local/go
 
 
-## Linux Aliases
+## Aliases
 alias du=gdu
 alias f=ranger
+
+alias desktop-mouse="input-remapper-control --command start --device 'Razer Razer Naga V2 HyperSpeed' --preset 'Desktop'"
+alias gaming-mouse="input-remapper-control --command stop --device 'Razer Razer Naga V2 HyperSpeed' --preset 'Desktop'"

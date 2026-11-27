@@ -4,7 +4,7 @@ This directory contains the **entrypoint playbooks** and their **vars** (`group_
 - **🧑‍💻 Local workstations** (the `local` inventory group)
 - **🛰️ Remote hosts** (the `remote` inventory group)
 
-> Tip: You can run these playbooks directly with `ansible-playbook`, or use the bootstrap wrapper `./scripts/setup.sh` (recommended for fresh machines).
+> Tip: You can run these playbooks directly with `ansible-playbook`, or use the bootstrap wrapper `./scripts/provision.sh` (recommended for fresh machines).
 
 ## 🗺️ What runs what
 
@@ -64,19 +64,26 @@ ansible-playbook playbooks/provision.yml --list-tasks
 ansible-playbook playbooks/provision.yml --list-tags
 ```
 
-## 🎛️ Running playbooks (via `setup.sh`)
+## 🎛️ Running playbooks (via `provision.sh`)
 
-`./scripts/setup.sh` defaults to **local** and supports:
+`./scripts/provision.sh` is the first-run path. It installs Git and Ansible when missing (Homebrew, `dnf`, or `apt`), then runs one playbook for one inventory host.
+
+It defaults to **local** and limits to the host whose inventory name matches `hostname -s`. `[local]` uses `ansible_connection=local` for every entry, so an unlimited local run would apply every workstation's config on this machine.
+
+- `-n <host>`: inventory host to limit to
 - `-t <tag>`: run only tagged tasks
 - `-e <tag>`: skip tag
-- `-r`: remote mode
+- `-r`: remote mode (`playbooks/provision.yml`); `-n` is required
+- `-l`: local mode (the default)
+
+Remote mode also needs `.ansible/vault_password` so `playbooks/group_vars/vault.yml` can be decrypted.
 
 Examples:
 
 ```bash
-./scripts/setup.sh
-./scripts/setup.sh -t packages
-./scripts/setup.sh -r -t k3s
+./scripts/provision.sh
+./scripts/provision.sh -n GameBox -t packages
+./scripts/provision.sh -r -n mini-cloud -t k3s
 ```
 
 ## 🧩 Vars (recommended reading)

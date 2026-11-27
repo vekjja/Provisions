@@ -20,6 +20,7 @@
     - { role: static-ip, tags: ['static-ip', 'network'] }
     - { role: pi-gadget, tags: ['pi-gadget', 'network'] }
     - { role: wireguard, tags: ['wireguard', 'network'] }
+    - { role: wakeonlan, tags: ['wakeonlan', 'network'] }
 
     - { role: nerd-fonts, tags: ['nerd-fonts'] }
     - { role: golang, tags: ['go'] }

@@ -72,35 +72,15 @@ openrazer: true
 
 ### 📡 `wakeonlan` (Wake-on-LAN)
 
-Used by: `roles/packages/tasks/wakeonlan.yml` (via `roles/packages/tasks/redhat.yml`)  
-Applies to: Fedora/RedHat only (when `wakeonlan: true`)
+Used by: `roles/wakeonlan`  
+Applies to: Fedora/RedHat when `wakeonlan: true`. Debian and macOS task files are stubs.
 
-Enables magic-packet Wake-on-LAN on the host's default network interface and persists it across reboots via a NetworkManager dispatcher script. Also requires WoL enabled in BIOS/UEFI.
+Enables magic-packet Wake-on-LAN on the host's default network interface and persists it across interface up events with a NetworkManager dispatcher script. Also requires WoL enabled in BIOS/UEFI.
 
 ```yaml
 # playbooks/host_vars/GameBox.yml
 wakeonlan: true
 ```
-
-### 🖥️ `rustdesk` (RustDesk remote desktop)
-
-Used by: `roles/packages/tasks/rustdesk.yml` (via `roles/packages/tasks/redhat.yml`)  
-Applies to: Fedora/RedHat only (when `rustdesk: true`)
-
-Downloads the official RustDesk RPM from GitHub releases, installs it with `dnf`, enables the RustDesk systemd service, opens the `rustdesk` firewalld service when available, and ensures `sshd` stays enabled.
-
-```yaml
-# playbooks/host_vars/GameBox.yml
-rustdesk: true
-
-# Optional: pin a specific release instead of fetching latest
-rustdesk_version: "1.4.9"
-```
-
-Notes:
-- Supports `x86_64` and `aarch64`.
-- If `rustdesk.service` is not found, the role discovers a matching unit via `systemctl list-unit-files | grep -i rust`.
-- If firewalld has no predefined `rustdesk` service, the install still succeeds; RustDesk may work on trusted networks without an explicit firewall rule.
 
 ### 🖥️ `appimages` (AppImage desktop shortcuts)
 
@@ -315,7 +295,7 @@ wireguard:
   server_endpoint: livingroom.cloud  # required for client configs
   interfaces:
     - name: wg0
-      address: 10.0.10.0/24
+      address: 10.0.10.1/24
       # Optional: private_key (if omitted, generated on host)
       peers:
         - name: workMac
@@ -328,6 +308,7 @@ Exact behavior:
 - Generates per-peer keys under `/etc/wireguard/clients/`
 - Renders `/etc/wireguard/<iface>.conf` and `wg-quick@<iface>` services
 - Writes client configs to `/etc/wireguard/clients/<iface>_<peer>.conf`
+- Archives those client configs into one tar and fetches it to `~/.wireguard/<inventory_hostname>-clients.tar` (mode `0600`). Override the directory with `wireguard.client_config_dir`. The `get-client-configs` tag runs the fetch.
 
 Dependencies/interaction:
 - For NAT, WireGuard uses **`static_ip.interface`** if present; otherwise it auto-detects the default route interface.
