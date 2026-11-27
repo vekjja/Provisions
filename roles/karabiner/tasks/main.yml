@@ -1,0 +1,3 @@
+- name: Darwin Tasks
+  ansible.builtin.include_tasks: darwin.yml
+  when: ansible_facts['os_family'] == 'Darwin' and karabiner | default(false)

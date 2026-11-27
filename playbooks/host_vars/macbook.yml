@@ -1,5 +1,7 @@
 ansible_python_interpreter: /opt/homebrew/bin/python3.14
 
+karabiner: true
+
 files:
   user:
     - { src: 'dotfiles/.vimrc', dest: '~/.vimrc' }

@@ -1,0 +1,23 @@
+# The cask ships a .pkg, so a fresh install needs sudo. Ansible does not expose
+# the -K prompt as a variable; set ansible_become_password (e.g. in vault.yml)
+# or install the cask once by hand.
+- name: Install Karabiner-Elements
+  community.general.homebrew_cask:
+    name: karabiner-elements
+    state: present
+    sudo_password: "{{ ansible_become_password | default(omit) }}"
+
+- name: Ensure Karabiner config directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/karabiner"
+    state: directory
+    mode: "0700"
+
+# Copied, not symlinked: Karabiner-Elements does not watch a symlinked
+# karabiner.json, and it rewrites the file when settings change in its UI.
+- name: Install Karabiner config
+  ansible.builtin.copy:
+    src: "{{ lookup('pipe', 'realpath ' + inventory_dir + '/../assets/' + karabiner_config) }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/karabiner/karabiner.json"
+    mode: "0600"
+    backup: true

@@ -1,0 +1,2 @@
+# Path under assets/ for the Karabiner-Elements config.
+karabiner_config: configs/karabiner.json

@@ -111,6 +111,24 @@ casks:
   - google-chrome
 ```
 
+### ⌨️ `karabiner` (Karabiner-Elements)
+
+Used by: `roles/karabiner`  
+Applies to: macOS only (when `karabiner: true`)
+
+Installs the `karabiner-elements` cask and copies `assets/configs/karabiner.json` to `~/.config/karabiner/karabiner.json` (copied, not symlinked, because Karabiner does not watch a symlinked config). Override the source with `karabiner_config` (path under `assets/`).
+
+```yaml
+# playbooks/host_vars/macbook.yml
+karabiner: true
+# karabiner_config: configs/karabiner.json
+```
+
+Notes:
+- The cask is a `.pkg`, so a first install needs sudo. Set `ansible_become_password` (e.g. in `vault.yml`) or run `brew install --cask karabiner-elements` once by hand.
+- After a first install, approve the driver extension and Input Monitoring in System Settings.
+- Changes made in the Karabiner UI are overwritten on the next run; copy `~/.config/karabiner/karabiner.json` back into `assets/configs/` to keep them.
+
 ### 🪟 `windows.packages` (Chocolatey packages)
 
 Used by: `roles/packages/tasks/windows.yml`  
