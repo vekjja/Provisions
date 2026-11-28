@@ -34,11 +34,11 @@ k3s: # Lightweight Kubernetes: https://github.com/k3s-io/k3s/releases/
   kubeconfig:
     context: mini-cloud
     server: 10.0.0.10
+#     server: "{{ ansible_facts['default_ipv4']['address'] }}"
     remote: ~/.kube/k3sconfig
     local: "{{ lookup('env', 'HOME') }}/.kube/mini-cloud"
   args:
-    - --bind-address=10.0.0.10
-    - --tls-san 10.0.0.10
+#     - "--tls-san {{ ansible_facts['default_ipv4']['address'] }}"
     - --tls-san livingroom.cloud
     - --disable=traefik
     - --disable=servicelb
